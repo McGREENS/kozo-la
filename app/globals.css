@@ -172,7 +172,7 @@ img {
 .careers-hero {
   position: relative;
   min-height: 100svh;
-  background: url("/hero.webp") center center / cover no-repeat;
+  background: url("/image2.jpeg") center center / cover no-repeat;
   display: flex;
   align-items: center;
 }
@@ -637,32 +637,33 @@ img {
 }
 
 .kozo-la-nav__logo {
-  font-size: clamp(22px, 2.4vw, 30px);
-  font-weight: 400;
-  letter-spacing: 0.30em;
-  color: #fff;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
-  padding-left: 0.30em;
+  display: flex;
+  align-items: center;
   text-decoration: none;
   line-height: 1;
 }
 
-.kozo-la-nav__careers {
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.80);
-  text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.30);
-  border-radius: 2px;
-  padding: 9px 22px;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-  white-space: nowrap;
+.kozo-la-nav__socials {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.kozo-la-nav__careers:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.60);
+.kozo-la-nav__social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.70);
+  text-decoration: none;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.kozo-la-nav__social-icon:hover {
+  border-color: rgba(255, 255, 255, 0.70);
   color: #fff;
 }
 
@@ -747,11 +748,11 @@ img {
 }
 
 .kozo-la-stage__opening {
-  font-size: 11px;
-  letter-spacing: 0.34em;
+  font-size: clamp(15px, 1.4vw, 20px);
+  letter-spacing: 0.30em;
   text-transform: uppercase;
-  color: var(--kozo-gold);
-  padding-left: 0.34em;
+  color: #fff;
+  padding-left: 0.30em;
 }
 
 /* ── Zone 3: bottom base bar ─────────────────────────────────── */
@@ -1101,23 +1102,22 @@ img {
 /* ── Logo ───────────────────────────────────────────────────── */
 
 .kozo-navbar__logo {
-  font-size: 26px;
-  font-weight: 400;
-  letter-spacing: 0.30em;
-  padding-left: 0.30em; /* optical compensation for tracking */
+  display: flex;
+  align-items: center;
   text-decoration: none;
   line-height: 1;
-  color: #fff;
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-  white-space: nowrap;
   flex-shrink: 0;
+  transition: opacity 0.3s ease;
 }
 
-.kozo-navbar--scrolled .kozo-navbar__logo,
-.kozo-navbar--open .kozo-navbar__logo {
-  color: #0A1B2A;
-  text-shadow: none;
+.kozo-navbar__logo:hover {
+  opacity: 0.85;
+}
+
+/* On scroll the background turns white — invert the logo to dark */
+.kozo-navbar--scrolled .kozo-navbar__logo img,
+.kozo-navbar--open .kozo-navbar__logo img {
+  filter: invert(1) brightness(0.15);
 }
 
 /* ── Hamburger — mobile only ────────────────────────────────── */

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 
@@ -100,39 +101,49 @@ export default function HomePage() {
           <a
             href="/"
             className="kozo-la-nav__logo kozo-la-animate"
-            style={{ fontFamily: displayFont, animationDelay: "0.1s" }}
+            style={{ animationDelay: "0.1s" }}
             aria-label="KŌZO Los Angeles"
           >
-            KŌZO
+            <Image
+              src="/KOZO_Logo_HOR_Positive_White.png"
+              alt="KŌZO Los Angeles"
+              width={110}
+              height={36}
+              priority
+              style={{ width: "auto", height: "36px" }}
+            />
           </a>
 
-          {/* Careers link — top right */}
-          <a
-            href="/careers"
-            className="kozo-la-nav__careers kozo-la-animate"
-            style={{ animationDelay: "0.1s" }}
-            aria-label="Careers at KŌZO Los Angeles"
-          >
-            Careers
-          </a>
+          {/* Social media icons — top right */}
+          <div className="kozo-la-nav__socials kozo-la-animate" style={{ animationDelay: "0.1s" }}>
+            <a
+              href="#"
+              className="kozo-la-nav__social-icon"
+              aria-label="KŌZO Los Angeles on Instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaInstagram size={15} aria-hidden="true" />
+            </a>
+            <a
+              href="#"
+              className="kozo-la-nav__social-icon"
+              aria-label="KŌZO Los Angeles on Facebook"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebook size={15} aria-hidden="true" />
+            </a>
+          </div>
         </header>
 
         {/* ── Zone 2: centred hero stage ────────────────────────── */}
         <main className="kozo-la-stage" aria-label="KŌZO Los Angeles — Coming Soon">
 
-          {/* City eyebrow */}
-          <p
-            className="kozo-la-stage__eyebrow kozo-la-animate"
-            style={{ animationDelay: "0.25s" }}
-            aria-label="Location: Los Angeles, California"
-          >
-            Los Angeles, California
-          </p>
-
           {/* Main wordmark */}
           <h1
             className="kozo-la-stage__title kozo-la-animate"
-            style={{ fontFamily: displayFont, animationDelay: "0.4s" }}
+            style={{ fontFamily: displayFont, animationDelay: "0.25s" }}
           >
             KŌZO
           </h1>
@@ -140,24 +151,22 @@ export default function HomePage() {
           {/* Gold rule */}
           <div
             className="kozo-la-stage__rule kozo-la-animate"
-            style={{ animationDelay: "0.55s" }}
+            style={{ animationDelay: "0.4s" }}
             aria-hidden="true"
           />
 
-          {/* Brand statement */}
+          {/* City statement */}
           <p
             className="kozo-la-stage__statement kozo-la-animate"
-            style={{ fontFamily: displayFont, animationDelay: "0.65s" }}
+            style={{ fontFamily: displayFont, animationDelay: "0.52s" }}
           >
-            Where African flavours meet
-            <br />
-            Pan&#8209;Asian precision
+            Los Angeles
           </p>
 
           {/* Opening date */}
           <p
             className="kozo-la-stage__opening kozo-la-animate"
-            style={{ animationDelay: "0.78s" }}
+            style={{ animationDelay: "0.65s" }}
           >
             Opening Summer 2026
           </p>
@@ -247,27 +256,6 @@ export default function HomePage() {
             className="kozo-la-base__centre kozo-la-animate"
             style={{ animationDelay: "1.0s" }}
           >
-            <nav className="kozo-la-socials" aria-label="Social media">
-              {/* TODO: replace # with real KŌZO LA handles */}
-              <a
-                href="https://www.instagram.com/kozolosangeles/"
-                className="kozo-la-social"
-                aria-label="KŌZO Los Angeles on Instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaInstagram size={16} aria-hidden="true" />
-              </a>
-              <a
-                href="https://www.instagram.com/kozolosangeles/"
-                className="kozo-la-social"
-                aria-label="KŌZO Los Angeles on Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FaFacebook size={16} aria-hidden="true" />
-              </a>
-            </nav>
             <p className="kozo-la-base__copy">
               &copy; {new Date().getFullYear()} Kōzo Hospitality.
             </p>
@@ -290,7 +278,7 @@ export default function HomePage() {
               className="kozo-la-careers__cta"
               aria-label="Express interest in joining KŌZO Los Angeles"
             >
-              Express Interest
+              Careers
             </Link>
           </div>
 

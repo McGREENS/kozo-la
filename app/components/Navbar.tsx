@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 const displayFont =
@@ -36,10 +37,16 @@ export default function Navbar() {
           <Link
             href="/"
             className="kozo-navbar__logo"
-            style={{ fontFamily: displayFont }}
             aria-label="KŌZO Los Angeles — Home"
           >
-            KŌZO
+            <Image
+              src="/KOZO_Logo_HOR_Positive_White.png"
+              alt="KŌZO Los Angeles"
+              width={110}
+              height={36}
+              priority
+              style={{ width: "auto", height: "32px" }}
+            />
           </Link>
 
           {/* Right links */}
