@@ -982,17 +982,26 @@ img {
     min-height: 100svh;
   }
 
+  /* Stronger vignette on mobile — the stacked bottom content
+     needs a much darker base to stay readable */
+  .kozo-la-page::after {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.65) 0%,
+        rgba(0, 0, 0, 0.05) 22%,
+        rgba(0, 0, 0, 0.05) 48%,
+        rgba(0, 0, 0, 0.96) 100%
+      );
+  }
+
   .kozo-la-nav {
     padding: 28px 24px 0;
   }
 
   .kozo-la-stage {
     padding: 32px 24px 40px;
-    min-height: 55svh;
-  }
-
-  .kozo-la-stage__title {
-    font-size: clamp(52px, 16vw, 96px);
+    min-height: 45svh;
   }
 
   .kozo-la-base {
@@ -1000,32 +1009,61 @@ img {
     grid-template-rows: auto auto auto;
     align-items: center;
     justify-items: center;
-    padding: 0 24px 48px;
-    gap: 40px;
+    padding: 0 24px 56px;
+    gap: 32px;
   }
 
   .kozo-la-base__left {
     align-items: center;
     width: 100%;
-    max-width: 360px;
+    max-width: 400px;
   }
 
   .kozo-la-base__label {
     text-align: center;
     width: 100%;
+    font-size: 12px;
+    color: #F2E4B1;
   }
 
   .kozo-la-form {
     max-width: 100%;
   }
 
+  .kozo-la-base__centre {
+    width: 100%;
+    align-items: center;
+  }
+
+  .kozo-la-base__copy {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
   .kozo-la-base__right {
     align-items: center;
     text-align: center;
+    width: 100%;
   }
 
   .kozo-la-careers__heading {
     max-width: 100%;
+    color: #fff;
+  }
+
+  .kozo-la-careers__eyebrow {
+    color: #A0D8B3;
+  }
+
+  /* Inputs more visible on mobile */
+  .kozo-la-input {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.40);
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .kozo-la-input::placeholder {
+    color: rgba(255, 255, 255, 0.65);
   }
 }
 
