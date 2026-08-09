@@ -97,7 +97,7 @@ export default function HomePage() {
 
         {/* ── Zone 1: top nav bar ──────────────────────────────── */}
         <header className="kozo-la-nav">
-          {/* Logo */}
+          {/* Desktop: horizontal logo — Mobile: circular mark */}
           <a
             href="/"
             className="kozo-la-nav__logo kozo-la-animate"
@@ -105,12 +105,12 @@ export default function HomePage() {
             aria-label="KŌZO Los Angeles"
           >
             <Image
-              src="/KOZO_Logo_HOR_Positive_White.png"
+              src="/kozo-logo-mark.webp"
               alt="KŌZO Los Angeles"
-              width={110}
-              height={36}
+              width={52}
+              height={52}
               priority
-              style={{ width: "auto", height: "36px" }}
+              className="kozo-la-nav__logo-mark"
             />
           </a>
 
@@ -141,12 +141,19 @@ export default function HomePage() {
         <main className="kozo-la-stage" aria-label="KŌZO Los Angeles — Coming Soon">
 
           {/* Main wordmark */}
-          <h1
+          <div
             className="kozo-la-stage__title kozo-la-animate"
-            style={{ fontFamily: displayFont, animationDelay: "0.25s" }}
+            style={{ animationDelay: "0.25s" }}
           >
-            KŌZO
-          </h1>
+            <Image
+              src="/KOZO_Logo_HOR_Positive_White.png"
+              alt="KŌZO Los Angeles"
+              width={600}
+              height={120}
+              priority
+              className="kozo-la-stage__logo"
+            />
+          </div>
 
           {/* Gold rule */}
           <div
@@ -257,7 +264,7 @@ export default function HomePage() {
             style={{ animationDelay: "1.0s" }}
           >
             <p className="kozo-la-base__copy">
-              &copy; {new Date().getFullYear()} Kōzo Hospitality.
+              &copy; {new Date().getFullYear()} Kōzo Hospitality USA LLC.
             </p>
           </div>
 

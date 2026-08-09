@@ -22,14 +22,7 @@ export default function Footer() {
 
       <div className="kozo-footer__inner">
 
-        {/* Left column */}
-        <div className="kozo-footer__column">
-          <h3 className="kozo-footer__heading">Contact Us</h3>
-          <p className="kozo-footer__text">Los Angeles, California</p>
-          <p className="kozo-footer__text">hello@kozola.com</p>
-        </div>
-
-        {/* Centre column */}
+        {/* Centre column — logo, socials, copyright */}
         <div className="kozo-footer__center">
           <div className="kozo-footer__logo-wrap" aria-label="KŌZO logo">
             <Image
@@ -49,19 +42,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="kozo-footer__copyright">
-            &ldquo;Kōzo Hospitality Ltd&rdquo;. All Rights Reserved.
-          </p>
-        </div>
-
-        {/* Right column */}
-        <div className="kozo-footer__column kozo-footer__column--right">
-          <h3 className="kozo-footer__heading">Opening Soon</h3>
-          <p className="kozo-footer__text">
-            <span className="kozo-footer__label">Afro-Asian Dining Experience</span>
-            <br />
-            Los Angeles, California
-            <br />
-            Opening Summer 2026
+            &copy; {new Date().getFullYear()} Kōzo Hospitality USA LLC. All Rights Reserved.
           </p>
         </div>
 

@@ -231,7 +231,7 @@ export default function CareersPage() {
             )}
           </div>
 
-          {/* ── Right: quote + contact info ────────────────────── */}
+          {/* ── Right: quote only ──────────────────────────────── */}
           <div className="careers-hero__right">
             <p
               className="contact-quote"
@@ -239,21 +239,6 @@ export default function CareersPage() {
             >
               Be part of something extraordinary.
             </p>
-
-            <div className="contact-info">
-              <div className="contact-info__block">
-                <p className="contact-info__label">Location</p>
-                <p className="contact-info__value">Los Angeles, California</p>
-              </div>
-              <div className="contact-info__block">
-                <p className="contact-info__label">Email</p>
-                <p className="contact-info__value">careers@kozola.com</p>
-              </div>
-              <div className="contact-info__block">
-                <p className="contact-info__label">Opening</p>
-                <p className="contact-info__value">Summer 2026</p>
-              </div>
-            </div>
           </div>
 
         </div>

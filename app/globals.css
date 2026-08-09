@@ -192,7 +192,7 @@ img {
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 80px;
   width: 100%;
   max-width: 1120px;
@@ -207,7 +207,8 @@ img {
 
 .careers-hero__right {
   flex: 0 0 280px;
-  padding-top: 48px;
+  display: flex;
+  align-items: center;
 }
 
 /* CV attachment */
@@ -617,10 +618,10 @@ img {
   background:
     linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.78) 0%,
-      rgba(0, 0, 0, 0.18) 28%,
-      rgba(0, 0, 0, 0.18) 62%,
-      rgba(0, 0, 0, 0.82) 100%
+      rgba(0, 0, 0, 0.72) 0%,
+      rgba(0, 0, 0, 0.10) 25%,
+      rgba(0, 0, 0, 0.10) 55%,
+      rgba(0, 0, 0, 0.92) 100%
     );
 }
 
@@ -641,6 +642,19 @@ img {
   align-items: center;
   text-decoration: none;
   line-height: 1;
+}
+
+.kozo-la-nav__logo-mark {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+@media (max-width: 600px) {
+  .kozo-la-nav__logo-mark {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .kozo-la-nav__socials {
@@ -717,15 +731,16 @@ img {
   padding-left: 0.42em;
 }
 
+/* Main wordmark */
 .kozo-la-stage__title {
-  font-size: clamp(64px, 11vw, 140px);
-  font-weight: 400;
-  letter-spacing: 0.26em;
-  color: #fff;
-  line-height: 1;
-  text-shadow: 0 8px 48px rgba(0, 0, 0, 0.50);
-  padding-left: 0.26em;
   margin-bottom: 16px;
+}
+
+.kozo-la-stage__logo {
+  width: clamp(240px, 50vw, 560px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 48px rgba(0, 0, 0, 0.50));
 }
 
 .kozo-la-stage__rule {
@@ -776,10 +791,11 @@ img {
 }
 
 .kozo-la-base__label {
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.30em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.38);
+  color: #F2E4B1;
+  font-weight: 600;
 }
 
 .kozo-la-form {
@@ -798,8 +814,8 @@ img {
 .kozo-la-input {
   flex: 1 1 auto;
   min-width: 0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.30);
   border-radius: 2px;
   padding: 10px 14px;
   font-size: 12px;
@@ -811,7 +827,7 @@ img {
 }
 
 .kozo-la-input::placeholder {
-  color: rgba(255, 255, 255, 0.32);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .kozo-la-input:focus {
@@ -901,14 +917,6 @@ img {
   color: var(--kozo-cream);
 }
 
-.kozo-la-base__copy {
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: rgba(255, 255, 255, 0.22);
-  text-align: center;
-  white-space: nowrap;
-}
-
 .kozo-la-base__right {
   display: flex;
   flex-direction: column;
@@ -921,15 +929,23 @@ img {
   font-size: 10px;
   letter-spacing: 0.30em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.32);
+  color: #A0D8B3;
 }
 
 .kozo-la-careers__heading {
   font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.72);
+  color: #fff;
   line-height: 1.3;
   max-width: 260px;
+}
+
+.kozo-la-base__copy {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.50);
+  text-align: center;
+  white-space: nowrap;
 }
 
 .kozo-la-careers__cta {
