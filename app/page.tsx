@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaInstagram, FaFacebook } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 
 const displayFont =
   "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif";
@@ -117,22 +117,13 @@ export default function HomePage() {
           {/* Social media icons — top right */}
           <div className="kozo-la-nav__socials kozo-la-animate" style={{ animationDelay: "0.1s" }}>
             <a
-              href="#"
+              href="https://www.instagram.com/kozolosangeles/"
               className="kozo-la-nav__social-icon"
               aria-label="KŌZO Los Angeles on Instagram"
               target="_blank"
               rel="noopener noreferrer"
             >
               <FaInstagram size={15} aria-hidden="true" />
-            </a>
-            <a
-              href="#"
-              className="kozo-la-nav__social-icon"
-              aria-label="KŌZO Los Angeles on Facebook"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FaFacebook size={15} aria-hidden="true" />
             </a>
           </div>
         </header>
@@ -155,12 +146,7 @@ export default function HomePage() {
             />
           </div>
 
-          {/* Gold rule */}
-          <div
-            className="kozo-la-stage__rule kozo-la-animate"
-            style={{ animationDelay: "0.4s" }}
-            aria-hidden="true"
-          />
+
 
           {/* City statement */}
           <p

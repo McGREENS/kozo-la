@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaInstagram, FaFacebook } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 
 /**
  * Footer — KŌZO Los Angeles
@@ -34,11 +34,8 @@ export default function Footer() {
             />
           </div>
           <div className="kozo-footer__socials" aria-label="Social media">
-            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="kozo-footer__icon">
+            <a href="https://www.instagram.com/kozolosangeles/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="kozo-footer__icon">
               <FaInstagram size={20} />
-            </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="kozo-footer__icon">
-              <FaFacebook size={20} />
             </a>
           </div>
           <p className="kozo-footer__copyright">
