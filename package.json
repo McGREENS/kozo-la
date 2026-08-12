@@ -7,10 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate": "node --env-file=.env.local scripts/migrate-la-newsletter.mjs"
+    "migrate": "node --env-file=.env.local scripts/migrate-la-newsletter.mjs",
+    "setup-admin": "node --env-file=.env.local scripts/setup-admin-users.mjs",
+    "generate-admin-hash": "node --env-file=.env.local scripts/generate-admin-hash.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
     "next": "16.1.7",
     "react": "19.2.3",
     "react-dom": "19.2.3",
