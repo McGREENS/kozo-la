@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
   try {
     const db = getDb();
     const result = await db.execute({
-      sql: `SELECT * FROM la_careers ORDER BY rowid DESC LIMIT 1000`,
+      sql: `SELECT id, name, email, role, message, cv_filename FROM la_careers ORDER BY id DESC LIMIT 1000`,
     });
 
     const applications = result.rows.map((row) => ({
@@ -29,6 +29,7 @@ export async function GET(req: NextRequest) {
       email: row[2],
       role: row[3],
       message: row[4],
+      cv_filename: row[5],
     }));
 
     return NextResponse.json({ applications });

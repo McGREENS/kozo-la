@@ -2,8 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { FaUsers, FaFileAlt, FaEnvelope } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaUsers,
+  FaFileAlt,
+  FaEnvelope,
+  FaUser,
+  FaDownload,
+  FaTimes,
+  FaFilePdf,
+  FaLock,
+  FaCheck,
+} from "react-icons/fa";
 
 type Tab = "subscribers" | "careers" | "users";
 
@@ -19,6 +30,7 @@ interface Application {
   email: string;
   role: string | null;
   message: string | null;
+  cv_filename?: string | null;
 }
 
 interface AdminUser {
@@ -29,6 +41,15 @@ interface AdminUser {
   is_active: number;
   created_at: string;
   updated_at: string;
+}
+
+interface JWTPayload {
+  userId: number;
+  email: string;
+  name: string;
+  role: string;
+  iat: number;
+  exp: number;
 }
 
 export default function AdminDashboard() {
@@ -44,8 +65,18 @@ export default function AdminDashboard() {
   const [newUser, setNewUser] = useState({ email: "", password: "", name: "", role: "admin" });
   const [createLoading, setCreateLoading] = useState(false);
 
+  // Profile management state
+  const [currentUser, setCurrentUser] = useState<AdminUser | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileForm, setProfileForm] = useState({ name: "", email: "" });
+  const [passwordForm, setPasswordForm] = useState({ password: "" });
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [profileMessage, setProfileMessage] = useState({ type: "", message: "" });
+
   useEffect(() => {
     fetchData();
+    fetchCurrentUser();
   }, []);
 
   async function fetchData() {
@@ -76,6 +107,118 @@ export default function AdminDashboard() {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchCurrentUser() {
+    try {
+      // Check if we have JWT stored in sessionStorage from login
+      const storedToken = sessionStorage.getItem("admin_token");
+      if (storedToken) {
+        try {
+          // Decode JWT without verification (just to get payload on client side)
+          const decoded = JSON.parse(atob(storedToken.split('.')[1])) as JWTPayload;
+          setCurrentUser({
+            id: decoded.userId,
+            email: decoded.email,
+            name: decoded.name,
+            role: decoded.role,
+            is_active: 1,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+        } catch (err) {
+          console.error("Failed to decode token:", err);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch current user:", err);
+    }
+  }
+
+  function openProfileModal() {
+    if (currentUser) {
+      setProfileForm({ name: currentUser.name, email: currentUser.email });
+      setPasswordForm({ password: "" });
+      setProfileMessage({ type: "", message: "" });
+      setShowProfileModal(true);
+    }
+  }
+
+  async function handleUpdateProfile(e: React.FormEvent) {
+    e.preventDefault();
+    setProfileLoading(true);
+    setProfileMessage({ type: "", message: "" });
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update_profile",
+          name: profileForm.name,
+          email: profileForm.email,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setProfileMessage({ type: "error", message: data.error || "Failed to update profile" });
+        return;
+      }
+
+      // Update current user state
+      if (currentUser) {
+        setCurrentUser({ ...currentUser, name: profileForm.name, email: profileForm.email });
+      }
+      setProfileMessage({ type: "success", message: "Profile updated successfully" });
+      setTimeout(() => setShowProfileModal(false), 1500);
+    } catch (err) {
+      console.error(err);
+      setProfileMessage({ type: "error", message: "Error updating profile" });
+    } finally {
+      setProfileLoading(false);
+    }
+  }
+
+  async function handleUpdatePassword(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!passwordForm.password || passwordForm.password.length < 8) {
+      setProfileMessage({ type: "error", message: "Password must be at least 8 characters" });
+      return;
+    }
+
+    setProfileLoading(true);
+    setProfileMessage({ type: "", message: "" });
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "update_password",
+          password: passwordForm.password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setProfileMessage({ type: "error", message: data.error || "Failed to update password" });
+        return;
+      }
+
+      setPasswordForm({ password: "" });
+      setShowNewPassword(false);
+      setProfileMessage({ type: "success", message: "Password updated successfully" });
+      setTimeout(() => setShowProfileModal(false), 1500);
+    } catch (err) {
+      console.error(err);
+      setProfileMessage({ type: "error", message: "Error updating password" });
+    } finally {
+      setProfileLoading(false);
     }
   }
 
@@ -135,9 +278,9 @@ export default function AdminDashboard() {
   }
 
   function handleLogout() {
-    // Clear httpOnly cookie by calling logout endpoint or just redirect
-    // The cookie will be cleared on the server
-    fetch("/api/admin/auth", { method: "GET" }).catch(() => {});
+    // Clear sessionStorage token
+    sessionStorage.removeItem("admin_token");
+    fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
     router.push("/admin/login");
   }
 
@@ -239,30 +382,61 @@ export default function AdminDashboard() {
           <h1 style={{ fontSize: "28px", color: "#F2E4B1", margin: 0, letterSpacing: "0.05em" }}>
             Dashboard
           </h1>
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: "10px 20px",
-              background: "rgba(248, 113, 113, 0.9)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-              fontSize: "12px",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontWeight: "600",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#f87171";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(248, 113, 113, 0.9)";
-            }}
-          >
-            Logout
-          </button>
+          <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+            {currentUser && (
+              <button
+                onClick={openProfileModal}
+                style={{
+                  padding: "10px 16px",
+                  background: "rgba(160, 216, 179, 0.15)",
+                  color: "#A0D8B3",
+                  border: "1px solid rgba(160, 216, 179, 0.3)",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "12px",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  fontWeight: "600",
+                  transition: "all 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(160, 216, 179, 0.25)";
+                  e.currentTarget.style.borderColor = "rgba(160, 216, 179, 0.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(160, 216, 179, 0.15)";
+                  e.currentTarget.style.borderColor = "rgba(160, 216, 179, 0.3)";
+                }}
+              >
+                <FaUser style={{ marginRight: "6px", fontSize: "14px" }} />
+                {currentUser.name || currentUser.email}
+              </button>
+            )}
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: "10px 20px",
+                background: "rgba(248, 113, 113, 0.9)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: "pointer",
+                fontSize: "12px",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                fontWeight: "600",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#f87171";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(248, 113, 113, 0.9)";
+              }}
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -433,11 +607,12 @@ export default function AdminDashboard() {
                   transition: "all 0.3s ease",
                 }}
               >
-                📥 Export CSV
+                <FaDownload style={{ marginRight: "6px", fontSize: "12px" }} />
+                Export CSV
               </button>
             )}
 
-            {!loading && activeTab === "users" && (
+            {!loading && activeTab === "users" && currentUser?.role === "super_admin" && (
               <button
                 onClick={() => setShowNewUserForm(!showNewUserForm)}
                 style={{
@@ -454,7 +629,17 @@ export default function AdminDashboard() {
                   transition: "all 0.3s ease",
                 }}
               >
-                {showNewUserForm ? "✕ Cancel" : "+ Add User"}
+                {showNewUserForm ? (
+                  <>
+                    <FaTimes style={{ marginRight: "6px", fontSize: "12px" }} />
+                    Cancel
+                  </>
+                ) : (
+                  <>
+                    <FaUser style={{ marginRight: "6px", fontSize: "12px" }} />
+                    Add User
+                  </>
+                )}
               </button>
             )}
           </div>
@@ -470,8 +655,8 @@ export default function AdminDashboard() {
             }}
           >
             {loading ? (
-              <div style={{ textAlign: "center", color: "#A0D8B3", padding: "60px 40px" }}>
-                ⏳ Loading...
+              <div style={{ textAlign: "center", color: "#A0D8B3", padding: "60px 40px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                Loading...
               </div>
             ) : error ? (
               <div style={{ color: "#f87171", padding: "20px", textAlign: "center" }}>
@@ -497,10 +682,33 @@ export default function AdminDashboard() {
                     loading={createLoading}
                   />
                 )}
-                <UsersTable users={users} onDelete={handleDeleteUser} />
+                <UsersTable
+                  users={users}
+                  onDelete={handleDeleteUser}
+                  currentUserId={currentUser?.id}
+                  isSuperAdmin={currentUser?.role === "super_admin"}
+                />
               </>
             )}
           </div>
+
+          {/* Profile Edit Modal */}
+          {showProfileModal && currentUser && (
+            <ProfileModal
+              currentUser={currentUser}
+              profileForm={profileForm}
+              setProfileForm={setProfileForm}
+              passwordForm={passwordForm}
+              setPasswordForm={setPasswordForm}
+              showNewPassword={showNewPassword}
+              setShowNewPassword={setShowNewPassword}
+              onUpdateProfile={handleUpdateProfile}
+              onUpdatePassword={handleUpdatePassword}
+              loading={profileLoading}
+              message={profileMessage}
+              onClose={() => setShowProfileModal(false)}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -530,7 +738,8 @@ function NewUserForm({
       }}
     >
       <h3 style={{ color: "#F2E4B1", marginTop: 0, marginBottom: "16px", fontSize: "14px" }}>
-        ➕ Create New User
+        <FaUser style={{ marginRight: "8px", fontSize: "14px", verticalAlign: "text-bottom" }} />
+        Create New User
       </h3>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
         <input
@@ -629,9 +838,13 @@ function NewUserForm({
 function UsersTable({
   users,
   onDelete,
+  currentUserId,
+  isSuperAdmin,
 }: {
   users: AdminUser[];
   onDelete: (userId: number) => void;
+  currentUserId?: number;
+  isSuperAdmin?: boolean;
 }) {
   return (
     <div style={{ overflowX: "auto" }}>
@@ -701,28 +914,53 @@ function UsersTable({
               <td style={{ padding: "14px 16px", fontSize: "12px", color: "rgba(242, 228, 177, 0.7)" }}>
                 {new Date(u.created_at).toLocaleDateString()}
               </td>
-              <td style={{ textAlign: "center", padding: "14px 16px" }}>
-                <button
-                  onClick={() => onDelete(u.id)}
-                  style={{
-                    padding: "6px 12px",
-                    background: "rgba(248, 113, 113, 0.9)",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "11px",
-                    transition: "all 0.3s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#f87171";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(248, 113, 113, 0.9)";
-                  }}
-                >
-                  Delete
-                </button>
+              <td style={{ textAlign: "center", padding: "14px 16px", display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap" }}>
+                {u.id === currentUserId && (
+                  <span
+                    style={{
+                      padding: "6px 12px",
+                      background: "rgba(160, 216, 179, 0.2)",
+                      color: "#A0D8B3",
+                      borderRadius: "4px",
+                      fontSize: "11px",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <FaCheck style={{ fontSize: "11px" }} />
+                    Current
+                  </span>
+                )}
+                {isSuperAdmin && u.role !== "super_admin" && u.id !== currentUserId && (
+                  <button
+                    onClick={() => onDelete(u.id)}
+                    style={{
+                      padding: "6px 12px",
+                      background: "rgba(248, 113, 113, 0.9)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "11px",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "#f87171";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(248, 113, 113, 0.9)";
+                    }}
+                  >
+                    Delete
+                  </button>
+                )}
+                {u.role === "super_admin" && (
+                  <span style={{ fontSize: "11px", color: "rgba(248, 113, 113, 0.7)", padding: "6px 12px", display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                    <FaLock style={{ fontSize: "11px" }} />
+                    Protected
+                  </span>
+                )}
               </td>
             </tr>
           ))}
@@ -826,6 +1064,8 @@ function CareersTable({
   applications: Application[];
   onDelete: (email: string) => void;
 }) {
+  const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
+
   return (
     <div style={{ overflowX: "auto" }}>
       <table
@@ -844,10 +1084,10 @@ function CareersTable({
               Email
             </th>
             <th style={{ textAlign: "left", padding: "16px", color: "#F0C2B2", fontWeight: "600" }}>
-              Role
+              Applied Role
             </th>
             <th style={{ textAlign: "left", padding: "16px", color: "#F0C2B2", fontWeight: "600" }}>
-              Message
+              Message Preview
             </th>
             <th style={{ textAlign: "center", padding: "16px", color: "#F0C2B2", fontWeight: "600" }}>
               Action
@@ -871,11 +1111,11 @@ function CareersTable({
             >
               <td style={{ padding: "14px 16px" }}>{app.name}</td>
               <td style={{ padding: "14px 16px", color: "#F2E4B1" }}>{app.email}</td>
-              <td style={{ padding: "14px 16px" }}>{app.role || "—"}</td>
+              <td style={{ padding: "14px 16px", textTransform: "capitalize" }}>{app.role || "—"}</td>
               <td
                 style={{
                   padding: "14px 16px",
-                  maxWidth: "200px",
+                  maxWidth: "300px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -885,7 +1125,63 @@ function CareersTable({
               >
                 {app.message || "—"}
               </td>
-              <td style={{ textAlign: "center", padding: "14px 16px" }}>
+              <td style={{ textAlign: "center", padding: "14px 16px", display: "flex", gap: "8px", justifyContent: "center", flexWrap: "wrap" }}>
+                {app.message && (
+                  <button
+                    onClick={() => setSelectedMessage(app.message || "")}
+                    style={{
+                      padding: "6px 12px",
+                      background: "rgba(160, 216, 179, 0.2)",
+                      color: "#A0D8B3",
+                      border: "1px solid rgba(160, 216, 179, 0.3)",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "11px",
+                      transition: "all 0.3s ease",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(160, 216, 179, 0.3)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(160, 216, 179, 0.2)";
+                    }}
+                  >
+                    <FaEye style={{ fontSize: "11px" }} />
+                    View
+                  </button>
+                )}
+                {app.cv_filename && (
+                  <a
+                    href={`/api/admin/careers/download?email=${encodeURIComponent(app.email)}`}
+                    download
+                    style={{
+                      padding: "6px 12px",
+                      background: "rgba(145, 130, 93, 0.9)",
+                      color: "#fff",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                      fontSize: "11px",
+                      textDecoration: "none",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      transition: "all 0.3s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "rgba(145, 130, 93, 1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "rgba(145, 130, 93, 0.9)";
+                    }}
+                  >
+                    <FaFilePdf style={{ fontSize: "11px" }} />
+                    Download
+                  </a>
+                )}
                 <button
                   onClick={() => onDelete(app.email)}
                   style={{
@@ -917,6 +1213,326 @@ function CareersTable({
           No applications found
         </div>
       )}
+
+      {/* Message Modal */}
+      {selectedMessage && (
+        <>
+          <div
+            onClick={() => setSelectedMessage(null)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(0, 0, 0, 0.7)",
+              zIndex: 100,
+            }}
+          />
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 101,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                background: "rgba(26, 26, 26, 0.95)",
+                backdropFilter: "blur(10px)",
+                border: "1px solid rgba(240, 194, 178, 0.2)",
+                borderRadius: "12px",
+                padding: "32px",
+                maxWidth: "600px",
+                width: "90%",
+                pointerEvents: "auto",
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <h3 style={{ color: "#F2E4B1", margin: 0, fontSize: "16px" }}>
+                  Application Message
+                </h3>
+                <button
+                  onClick={() => setSelectedMessage(null)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#A0D8B3",
+                    cursor: "pointer",
+                    fontSize: "20px",
+                    padding: "0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FaTimes />
+                </button>
+              </div>
+              <p style={{ color: "rgba(242, 228, 177, 0.8)", fontSize: "14px", lineHeight: "1.6", whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                {selectedMessage}
+              </p>
+            </div>
+          </div>
+        </>
+      )}
     </div>
+  );
+}
+
+function ProfileModal({
+  currentUser,
+  profileForm,
+  setProfileForm,
+  passwordForm,
+  setPasswordForm,
+  showNewPassword,
+  setShowNewPassword,
+  onUpdateProfile,
+  onUpdatePassword,
+  loading,
+  message,
+  onClose,
+}: {
+  currentUser: AdminUser;
+  profileForm: { name: string; email: string };
+  setProfileForm: (form: { name: string; email: string }) => void;
+  passwordForm: { password: string };
+  setPasswordForm: (form: { password: string }) => void;
+  showNewPassword: boolean;
+  setShowNewPassword: (show: boolean) => void;
+  onUpdateProfile: (e: React.FormEvent) => void;
+  onUpdatePassword: (e: React.FormEvent) => void;
+  loading: boolean;
+  message: { type: string; message: string };
+  onClose: () => void;
+}) {
+  return (
+    <>
+      {/* Modal Overlay */}
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(0, 0, 0, 0.7)",
+          zIndex: 100,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      />
+
+      {/* Modal */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 101,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            background: "rgba(26, 26, 26, 0.95)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(160, 216, 179, 0.2)",
+            borderRadius: "12px",
+            padding: "40px",
+            maxWidth: "500px",
+            width: "90%",
+            pointerEvents: "auto",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+            <h2 style={{ color: "#F2E4B1", margin: 0, fontSize: "20px" }}>
+              Edit Profile
+            </h2>
+            <button
+              onClick={onClose}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#A0D8B3",
+                cursor: "pointer",
+                fontSize: "20px",
+                padding: "0",
+                width: "32px",
+                height: "32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FaTimes />
+            </button>
+          </div>
+
+          {/* Message */}
+          {message.message && (
+            <div
+              style={{
+                marginBottom: "16px",
+                padding: "12px 14px",
+                borderRadius: "6px",
+                fontSize: "12px",
+                background:
+                  message.type === "success"
+                    ? "rgba(160, 216, 179, 0.2)"
+                    : "rgba(248, 113, 113, 0.2)",
+                color: message.type === "success" ? "#A0D8B3" : "#f87171",
+                border: `1px solid ${
+                  message.type === "success"
+                    ? "rgba(160, 216, 179, 0.3)"
+                    : "rgba(248, 113, 113, 0.3)"
+                }`,
+              }}
+            >
+              {message.message}
+            </div>
+          )}
+
+          {/* Profile Form */}
+          <form onSubmit={onUpdateProfile} style={{ marginBottom: "24px" }}>
+            <h3 style={{ color: "#A0D8B3", fontSize: "14px", marginBottom: "16px" }}>
+              Profile Information
+            </h3>
+            <div style={{ marginBottom: "12px" }}>
+              <label style={{ display: "block", color: "#A0D8B3", fontSize: "11px", marginBottom: "6px", textTransform: "uppercase" }}>
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={profileForm.name}
+                onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  background: "rgba(242, 228, 177, 0.08)",
+                  border: "1px solid rgba(242, 228, 177, 0.2)",
+                  borderRadius: "6px",
+                  color: "#F2E4B1",
+                  fontSize: "13px",
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", color: "#A0D8B3", fontSize: "11px", marginBottom: "6px", textTransform: "uppercase" }}>
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={profileForm.email}
+                onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                style={{
+                  width: "100%",
+                  padding: "10px 12px",
+                  background: "rgba(242, 228, 177, 0.08)",
+                  border: "1px solid rgba(242, 228, 177, 0.2)",
+                  borderRadius: "6px",
+                  color: "#F2E4B1",
+                  fontSize: "13px",
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                background: "#A0D8B3",
+                color: "#0A1B2A",
+                border: "none",
+                borderRadius: "6px",
+                cursor: loading ? "not-allowed" : "pointer",
+                fontSize: "12px",
+                fontWeight: "600",
+                opacity: loading ? 0.6 : 1,
+              }}
+            >
+              {loading ? "Updating..." : "Update Profile"}
+            </button>
+          </form>
+
+          {/* Password Form */}
+          <form onSubmit={onUpdatePassword}>
+            <h3 style={{ color: "#A0D8B3", fontSize: "14px", marginBottom: "16px", paddingTop: "16px", borderTop: "1px solid rgba(160, 216, 179, 0.2)" }}>
+              Change Password
+            </h3>
+            <div style={{ marginBottom: "16px" }}>
+              <label style={{ display: "block", color: "#A0D8B3", fontSize: "11px", marginBottom: "6px", textTransform: "uppercase" }}>
+                New Password (min 8 characters)
+              </label>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", background: "rgba(242, 228, 177, 0.08)", border: "1px solid rgba(242, 228, 177, 0.2)", borderRadius: "6px", padding: "0 10px" }}>
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  value={passwordForm.password}
+                  onChange={(e) => setPasswordForm({ password: e.target.value })}
+                  style={{
+                    flex: 1,
+                    padding: "10px 0",
+                    background: "transparent",
+                    border: "none",
+                    color: "#F2E4B1",
+                    fontSize: "13px",
+                    fontFamily: "inherit",
+                    outline: "none",
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "#A0D8B3",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    padding: "0",
+                  }}
+                >
+                  {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "10px 16px",
+                background: "rgba(248, 113, 113, 0.9)",
+                color: "#fff",
+                border: "none",
+                borderRadius: "6px",
+                cursor: loading ? "not-allowed" : "pointer",
+                fontSize: "12px",
+                fontWeight: "600",
+                opacity: loading ? 0.6 : 1,
+              }}
+            >
+              {loading ? "Updating..." : "Update Password"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 }

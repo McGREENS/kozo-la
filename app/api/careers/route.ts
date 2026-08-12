@@ -14,13 +14,14 @@ export async function POST(req: NextRequest) {
 
     const name    = ((formData.get("name")    as string) ?? "").trim();
     const email   = ((formData.get("email")   as string) ?? "").trim();
+    const role    = ((formData.get("role")    as string) ?? "").trim();
     const message = ((formData.get("message") as string) ?? "").trim();
     const cvFile  = formData.get("cv") as File | null;
 
     // ── Validation ──────────────────────────────────────────────
-    if (!name || !email) {
+    if (!name || !email || !role) {
       return NextResponse.json(
-        { error: "Name and email are required." },
+        { error: "Name, email, and role are required." },
         { status: 400 }
       );
     }
@@ -40,12 +41,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Read PDF bytes if provided
+    let cvData: Uint8Array | null = null;
+    let cvFilename = "";
+    if (cvFile && cvFile.size > 0) {
+      const buffer = await cvFile.arrayBuffer();
+      cvData = new Uint8Array(buffer);
+      cvFilename = cvFile.name;
+    }
+
     // ── Persist ──────────────────────────────────────────────────
     const db = getDb();
-    await db.execute({
-      sql: `INSERT INTO la_careers (name, email, message) VALUES (?, ?, ?)`,
-      args: [name, email, message],
-    });
+    
+    // Try to insert with CV columns first, fall back if they don't exist
+    try {
+      await db.execute({
+        sql: `INSERT INTO la_careers (name, email, role, message, cv_filename, cv_data) VALUES (?, ?, ?, ?, ?, ?)`,
+        args: [name, email, role, message, cvFilename || null, cvData || null],
+      });
+    } catch (err: unknown) {
+      // If table doesn't have cv columns, insert without them
+      const errorMsg = err instanceof Error ? err.message : String(err);
+      if (errorMsg.includes("no such column") || errorMsg.includes("cv_filename")) {
+        await db.execute({
+          sql: `INSERT INTO la_careers (name, email, role, message) VALUES (?, ?, ?, ?)`,
+          args: [name, email, role, message],
+        });
+      } else {
+        throw err;
+      }
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err: unknown) {

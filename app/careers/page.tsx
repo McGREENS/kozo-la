@@ -57,7 +57,7 @@ export default function CareersPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [fileName, setFileName] = useState("No file chosen");
 
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", role: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -78,6 +78,7 @@ export default function CareersPage() {
       const fd = new FormData();
       fd.append("name", form.name);
       fd.append("email", form.email);
+      fd.append("role", form.role);
       fd.append("message", form.message);
       const file = fileInputRef.current?.files?.[0];
       if (file) fd.append("cv", file);
@@ -172,6 +173,16 @@ export default function CareersPage() {
                   autoComplete="email"
                   required
                   aria-label="Your email address"
+                />
+                <input
+                  className="contact-input"
+                  type="text"
+                  name="role"
+                  placeholder="Role you are interested in"
+                  value={form.role}
+                  onChange={handleChange}
+                  required
+                  aria-label="Applied role"
                 />
                 <textarea
                   className="contact-input contact-textarea"

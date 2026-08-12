@@ -9,6 +9,9 @@
     "lint": "eslint",
     "migrate": "node --env-file=.env.local scripts/migrate-la-newsletter.mjs",
     "setup-admin": "node --env-file=.env.local scripts/setup-admin-users.mjs",
+    "migrate-cv": "node --env-file=.env.local scripts/add-cv-columns.mjs",
+    "migrate-role": "node --env-file=.env.local scripts/add-role-column.mjs",
+    "update-super-admin": "node --env-file=.env.local scripts/update-super-admin.mjs",
     "generate-admin-hash": "node --env-file=.env.local scripts/generate-admin-hash.mjs"
   },
   "dependencies": {

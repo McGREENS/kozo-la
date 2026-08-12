@@ -48,7 +48,7 @@ async function setupAdminUsers() {
       process.exit(0);
     }
 
-    // Create default admin user
+    // Create default super_admin user (protected user that cannot be deleted)
     const defaultPassword = "Admin@Kozo2026";
     const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
@@ -57,13 +57,14 @@ async function setupAdminUsers() {
         INSERT INTO admin_users (email, password_hash, name, role, is_active)
         VALUES (?, ?, ?, ?, ?)
       `,
-      args: ["admin@kozousa.com", passwordHash, "Kōzo Admin", "admin", 1],
+      args: ["laurierhab@gmail.com", passwordHash, "Laurier HABIYAREMYE", "super_admin", 1],
     });
 
-    console.log("✅ Seeded default admin user!\n");
+    console.log("✅ Seeded default super_admin user!\n");
     console.log("📋 Admin Credentials:");
-    console.log("   Email:    admin@kozousa.com");
-    console.log("   Password: Admin@Kozo2026\n");
+    console.log("   Email:    laurierhab@gmail.com");
+    console.log("   Password: Admin@Kozo2026");
+    console.log("   Role:     super_admin (protected - cannot be deleted)\n");
     console.log("⚠️  ⚠️  IMPORTANT: Change this password after first login!\n");
 
     process.exit(0);

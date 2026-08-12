@@ -247,3 +247,58 @@ export async function updateAdminUserPassword(
     return false;
   }
 }
+
+/**
+ * Update admin user profile (name, email)
+ */
+export async function updateAdminUserProfile(
+  userId: number,
+  name: string,
+  email: string
+): Promise<boolean> {
+  try {
+    const db = getDb();
+
+    await db.execute({
+      sql: "UPDATE admin_users SET name = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
+      args: [name, email, userId],
+    });
+
+    return true;
+  } catch (err) {
+    console.error("[auth] Error updating profile:", err);
+    return false;
+  }
+}
+
+/**
+ * Get admin users visible to current user (respects role hierarchy)
+ */
+export async function getVisibleAdminUsers(currentUserRole: string): Promise<Omit<AdminUser, "password_hash">[]> {
+  try {
+    const db = getDb();
+    let sql = "SELECT id, email, name, role, is_active, created_at, updated_at FROM admin_users";
+
+    // Non-super-admins cannot see super-admins
+    if (currentUserRole !== "super_admin") {
+      sql += " WHERE role != 'super_admin'";
+    }
+
+    sql += " ORDER BY created_at DESC";
+
+    const result = await db.execute({ sql });
+
+    return result.rows.map((row) => ({
+      id: row[0] as number,
+      email: row[1] as string,
+      name: row[2] as string,
+      role: row[3] as string,
+      is_active: row[4] as number,
+      created_at: row[5] as string,
+      updated_at: row[6] as string,
+    }));
+  } catch (err) {
+    console.error("[auth] Error getting visible users:", err);
+    return [];
+  }
+}

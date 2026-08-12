@@ -14,9 +14,10 @@ await db.execute(`
   CREATE TABLE IF NOT EXISTS la_careers (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     name       TEXT NOT NULL,
-    email      TEXT NOT NULL,
+    email      TEXT NOT NULL UNIQUE,
+    role       TEXT,
     message    TEXT NOT NULL DEFAULT '',
-    cv_name    TEXT NOT NULL DEFAULT '',
+    cv_filename TEXT,
     cv_data    BLOB,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   )

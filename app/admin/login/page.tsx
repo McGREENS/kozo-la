@@ -32,6 +32,8 @@ export default function AdminLoginPage() {
         return;
       }
 
+      // Store token in sessionStorage for client-side access
+      sessionStorage.setItem("admin_token", data.token);
       router.push("/admin/dashboard");
     } catch {
       setError("Something went wrong. Please try again.");
