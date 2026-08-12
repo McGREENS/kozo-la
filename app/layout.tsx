@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 /* ── Root metadata ───────────────────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kozola.com"),
+  metadataBase: new URL("https://kozousa.com"),
   title: {
     default: "Kōzo Los Angeles — Afro-Asian Dining Experience Opening Summer 2026",
     template: "%s | Kōzo Los Angeles",
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     "Afro-Asian cuisine",
     "restaurant jobs Los Angeles",
   ],
-  authors: [{ name: "Kōzo Hospitality", url: "https://kozola.com" }],
+  authors: [{ name: "Kōzo Hospitality", url: "https://kozousa.com" }],
   creator: "Kōzo Hospitality",
   publisher: "Kōzo Hospitality",
   robots: {
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://kozola.com",
+    canonical: "https://kozousa.com",
   },
   verification: {
     google: "BX4iPAsfnQttyY3NO7ZiXgo7gN1cC6l9TVnkyLj0gmg",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://kozola.com",
+    url: "https://kozousa.com",
     siteName: "Kōzo Los Angeles",
     title: "Kōzo Los Angeles — Afro-Asian Dining Experience",
     description:
@@ -95,7 +95,10 @@ export const metadata: Metadata = {
     creator: "@kozolosangeles",
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { rel: "icon", url: "/favicon.ico", sizes: "any" },
+      { rel: "apple-touch-icon", url: "/favicon.ico" },
+    ],
     shortcut: "/favicon.ico",
   },
 };
@@ -108,6 +111,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#0A1B2A" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      </head>
       <body className={`${optima.variable} antialiased`}>
         <ImageProtection />
         {children}

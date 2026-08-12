@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description:
       "Join our team. We're hiring experienced hospitality professionals for our LA opening.",
     type: "website",
-    url: "https://kozola.com/careers",
+    url: "https://kozousa.com/careers",
     siteName: "Kōzo Los Angeles",
     images: [
       {

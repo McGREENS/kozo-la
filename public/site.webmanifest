@@ -1,0 +1,17 @@
+{
+  "name": "Kōzo Los Angeles",
+  "short_name": "Kōzo LA",
+  "description": "Afro-Asian fine dining experience opening Summer 2026 in Los Angeles",
+  "start_url": "https://kozousa.com",
+  "display": "standalone",
+  "background_color": "#0b0b0b",
+  "theme_color": "#0A1B2A",
+  "scope": "https://kozousa.com",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

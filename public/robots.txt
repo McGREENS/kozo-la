@@ -1,0 +1,10 @@
+# Robots.txt for Kōzo Los Angeles
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://kozousa.com/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
