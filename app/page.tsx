@@ -83,13 +83,14 @@ export default function HomePage() {
        */}
       <div className="kozo-la-page">
 
-        {/* ── Background video — z-index 0 ─────────────────── */}
+        {/* Background video with preload — z-index 0 */}
         <video
           src="/kozovideo.mp4"
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
           aria-hidden="true"
           className="object-cover object-center absolute inset-0 w-full h-full"
           style={{ zIndex: 0 }}
@@ -110,6 +111,7 @@ export default function HomePage() {
               width={52}
               height={52}
               priority
+              quality={80}
               className="kozo-la-nav__logo-mark"
             />
           </a>
@@ -142,6 +144,7 @@ export default function HomePage() {
               width={600}
               height={120}
               priority
+              quality={80}
               className="kozo-la-stage__logo"
             />
           </div>
@@ -244,13 +247,22 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Centre — social icons + copyright */}
+          {/* Centre — social icons + copyright + email */}
           <div
             className="kozo-la-base__centre kozo-la-animate"
             style={{ animationDelay: "1.0s" }}
           >
             <p className="kozo-la-base__copy">
               &copy; {new Date().getFullYear()} Kōzo Hospitality USA LLC.
+            </p>
+            <p className="kozo-la-base__copy" style={{ marginTop: "8px", fontSize: "11px" }}>
+              Questions? Email us at{" "}
+              <a 
+                href="mailto:info@kozousa.com"
+                style={{ color: "#F2E4B1", textDecoration: "none" }}
+              >
+                info@kozousa.com
+              </a>
             </p>
           </div>
 

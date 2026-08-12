@@ -231,7 +231,7 @@ export default function CareersPage() {
             )}
           </div>
 
-          {/* ── Right: quote only ──────────────────────────────── */}
+          {/* ── Right: quote + contact email ────────────────── */}
           <div className="careers-hero__right">
             <p
               className="contact-quote"
@@ -239,6 +239,18 @@ export default function CareersPage() {
             >
               Be part of something extraordinary.
             </p>
+            <div className="contact-info">
+              <div className="contact-info__block">
+                <p className="contact-info__label">For career inquiries</p>
+                <a 
+                  href="mailto:Careers@kozousa.com" 
+                  className="contact-info__value"
+                  style={{ textDecoration: "none", cursor: "pointer" }}
+                >
+                  Careers@kozousa.com
+                </a>
+              </div>
+            </div>
           </div>
 
         </div>

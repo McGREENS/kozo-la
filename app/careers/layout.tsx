@@ -1,15 +1,41 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Careers",
+  title: "Careers | Kōzo Los Angeles",
   description:
-    "Join the Kōzo Los Angeles team. We're building something extraordinary and looking for passionate hospitality professionals. Apply today.",
-  alternates: { canonical: "https://kozola.com/careers" },
+    "Join the Kōzo Los Angeles team. We're hiring passionate hospitality professionals for our Afro-Asian fine dining restaurant opening Summer 2026. Positions include chefs, managers, sommeliers, and more.",
+  keywords: [
+    "Kōzo Los Angeles careers",
+    "restaurant jobs Los Angeles",
+    "chef jobs LA",
+    "hospitality jobs Los Angeles",
+    "fine dining careers",
+    "Kōzo jobs",
+    "sommelier jobs Los Angeles",
+    "culinary careers",
+  ],
   openGraph: {
-    url: "https://kozola.com/careers",
     title: "Careers at Kōzo Los Angeles",
     description:
-      "Join our team. Be part of something extraordinary at Kōzo Los Angeles.",
+      "Join our team. We're hiring experienced hospitality professionals for our LA opening.",
+    type: "website",
+    url: "https://kozola.com/careers",
+    siteName: "Kōzo Los Angeles",
+    images: [
+      {
+        url: "/og-image.webp",
+        width: 1200,
+        height: 630,
+        alt: "Careers at Kōzo Los Angeles",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "Join the Kōzo Los Angeles Team",
+    description:
+      "We're hiring passionate hospitality professionals for our LA opening.",
+    creator: "@kozolosangeles",
   },
 };
 

@@ -30,6 +30,7 @@ export default function Footer() {
               alt="Kōzo logo mark"
               width={130}
               height={84}
+              quality={80}
               className="kozo-footer__logo-image"
             />
           </div>
