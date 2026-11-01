@@ -247,7 +247,7 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Centre — social icons + copyright + email */}
+          {/* Centre — social icons + copyright + email + address */}
           <div
             className="kozo-la-base__centre kozo-la-animate"
             style={{ animationDelay: "1.0s" }}
@@ -263,6 +263,10 @@ export default function HomePage() {
               >
                 info@kozousa.com
               </a>
+            </p>
+            <p className="kozo-la-base__copy" style={{ marginTop: "12px", fontSize: "11px", lineHeight: "1.6" }}>
+              8500 W Sunset Blvd<br />
+              West Hollywood, CA 90069
             </p>
           </div>
 

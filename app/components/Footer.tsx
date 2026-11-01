@@ -22,6 +22,16 @@ export default function Footer() {
 
       <div className="kozo-footer__inner">
 
+        {/* Left column — address */}
+        <div className="kozo-footer__column">
+          <h3 className="kozo-footer__heading">Address</h3>
+          <address className="kozo-footer__address" style={{ fontStyle: "normal" }}>
+            <p>8500 W Sunset Blvd</p>
+            <p>West Hollywood, CA 90069</p>
+            <p>United States</p>
+          </address>
+        </div>
+
         {/* Centre column — logo, socials, copyright */}
         <div className="kozo-footer__center">
           <div className="kozo-footer__logo-wrap" aria-label="KŌZO logo">
