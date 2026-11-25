@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import MenuModal from "./MenuModal";
 
 const displayFont =
   "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif";
@@ -13,10 +14,12 @@ const bodyText =
   "text-[14px] leading-[1.85] tracking-[0.02em] text-[#2a3640]";
 
 export default function MenuSection() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <>
       {/* Food & Drinks on cream */}
-      <section className="kozo-menu" aria-label="Food and Drinks">
+      <section id="food-drink" className="kozo-menu" aria-label="Food and Drinks">
         <div className="mx-auto max-w-[1120px] px-8 py-20">
           {/* Food — text left, image right */}
           <div className="flex flex-col md:flex-row gap-10 md:gap-14 items-center">
@@ -193,6 +196,8 @@ export default function MenuSection() {
           
         </div>
       </section>
+
+      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
     </>
   );
 }
