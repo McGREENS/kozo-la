@@ -5,7 +5,7 @@ const displayFont =
 
 export default function EventsSection() {
   return (
-    <section style={{ background: "#05060c" }} aria-labelledby="kozo-events-heading">
+    <section id="private-events" style={{ background: "#05060c" }} aria-labelledby="kozo-events-heading">
       <div className="mx-auto max-w-[760px] px-8 py-24 text-center">
         <p
           className="text-[12px] tracking-[0.22em] uppercase mb-4"

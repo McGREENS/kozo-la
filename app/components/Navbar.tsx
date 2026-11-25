@@ -40,6 +40,17 @@ export default function Navbar() {
     }
   };
 
+  const scrollToEvents = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById('private-events');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If not on homepage, navigate to homepage with hash
+      window.location.href = '/#private-events';
+    }
+  };
+
   return (
     <>
       <header
@@ -56,7 +67,7 @@ export default function Navbar() {
           >
             <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={() => setMenuOpen(true)}>Food & Drink</button>
             <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={scrollToStory}>Our Story</button>
-            <Link className={linkClass} href="/private-events">Private Events</Link>
+            <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={scrollToEvents}>Private Events</button>
           </nav>
 
           {/* Logo */}
@@ -112,7 +123,7 @@ export default function Navbar() {
         >
           <button onClick={() => { setOpen(false); setMenuOpen(true); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Food & Drink</button>
           <button onClick={(e) => { setOpen(false); scrollToStory(e); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Our Story</button>
-          <Link href="/private-events" onClick={() => setOpen(false)}>Private Events</Link>
+          <button onClick={(e) => { setOpen(false); scrollToEvents(e); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Private Events</button>
           <Link href="/faqs" onClick={() => setOpen(false)}>FAQs</Link>
           <button
             onClick={() => { setOpen(false); setBookingOpen(true); }}
