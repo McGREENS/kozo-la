@@ -46,7 +46,35 @@ export default function Home() {
               postalCode: "90069",
               addressCountry: "US",
             },
+            telephone: "+1-213-723-0821",
             email: "info@kozousa.com",
+            openingHoursSpecification: [
+              {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Wednesday", "Sunday"],
+                opens: "17:30",
+                closes: "22:30"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: ["Thursday", "Friday", "Saturday"],
+                opens: "17:30",
+                closes: "23:30"
+              }
+            ],
+            menu: "https://www.kozousa.com/api/menus/food",
+            hasMenu: [
+              {
+                "@type": "Menu",
+                name: "Food Menu",
+                url: "https://www.kozousa.com/api/menus/food"
+              },
+              {
+                "@type": "Menu",
+                name: "Wine & Cocktail Menu",
+                url: "https://www.kozousa.com/api/menus/wine"
+              }
+            ],
             sameAs: ["https://www.instagram.com/kozolosangeles/?hl=en"],
           }),
         }}

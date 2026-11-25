@@ -39,7 +39,7 @@ export default function MenuSection() {
               </p>
               
               <a
-                href="/menus/menu-food.pdf"
+                href="/api/menus/food"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={ctaButton}
@@ -83,7 +83,7 @@ export default function MenuSection() {
                  dishes at Kōzo. Enjoy a glass, a carafe or a bottle for the table.
               </p>
               <a
-                href="/menus/menu-drinks.pdf"
+                href="/api/menus/wine"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={ctaButton}

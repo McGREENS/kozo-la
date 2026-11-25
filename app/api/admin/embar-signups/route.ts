@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
-import { verifyToken } from "@/app/lib/auth";
-
-async function verifyAuth(req: NextRequest): Promise<boolean> {
-  const token = req.cookies.get("admin_token")?.value;
-  if (!token) return false;
-  const decoded = await verifyToken(token);
-  return decoded !== null;
-}
+import { getSession } from "@/app/lib/session";
 
 export async function GET(req: NextRequest) {
-  if (!(await verifyAuth(req))) {
+  const session = await getSession();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

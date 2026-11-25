@@ -75,6 +75,12 @@ export default async function DashboardPage() {
             <p className="text-[22px] font-normal text-white" style={{ fontFamily: "var(--font-optima), ui-serif, Georgia, serif" }}>PDF Menus</p>
             <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.4)" }}>Upload Food, Drinks &amp; Wine PDFs</p>
           </a>
+          <a href="/admin/private-events" className="rounded-[4px] px-6 py-6 flex flex-col gap-2 transition-colors"
+            style={{ background: "rgba(242,228,177,0.07)", border: "1px solid rgba(242,228,177,0.18)" }}>
+            <p className="text-[13px] tracking-[0.12em] uppercase" style={{ color: "#b89a5a" }}>Events</p>
+            <p className="text-[22px] font-normal text-white" style={{ fontFamily: "var(--font-optima), ui-serif, Georgia, serif" }}>Private Events</p>
+            <p className="text-[12px]" style={{ color: "rgba(255,255,255,0.4)" }}>View event inquiries</p>
+          </a>
           <a href="/admin/embar-signups" className="rounded-[4px] px-6 py-6 flex flex-col gap-2 transition-colors"
             style={{ background: "rgba(242,228,177,0.07)", border: "1px solid rgba(242,228,177,0.18)" }}>
             <p className="text-[13px] tracking-[0.12em] uppercase" style={{ color: "#b89a5a" }}>Embār</p>
