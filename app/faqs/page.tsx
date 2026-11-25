@@ -124,6 +124,7 @@ export default function FAQsPage() {
           </div>
         </div>
       </section>
+      </main>
       <Footer />
     </>
   );
