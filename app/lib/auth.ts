@@ -70,7 +70,18 @@ export async function generateToken(user: AdminUser, expiresIn: string = "24h"):
 export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, getSecretKey());
-    return payload as JWTPayload;
+    
+    // Validate that payload has the required properties
+    if (
+      typeof payload.userId === 'number' &&
+      typeof payload.email === 'string' &&
+      typeof payload.name === 'string' &&
+      typeof payload.role === 'string'
+    ) {
+      return payload as unknown as JWTPayload;
+    }
+    
+    return null;
   } catch {
     return null;
   }
