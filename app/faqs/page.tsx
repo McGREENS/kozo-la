@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "FAQs - Kōzo",
@@ -10,7 +12,9 @@ const displayFont = "var(--font-display), ui-serif, Georgia, Cambria, 'Times New
 
 export default function FAQsPage() {
   return (
-    <main className="min-h-screen" style={{ background: "var(--kozo-cream)" }}>
+    <>
+      <Navbar />
+      <main className="min-h-screen" style={{ background: "var(--kozo-cream)" }}>
       {/* Hero Section */}
       <section className="relative h-[50vh] min-h-[400px] overflow-hidden">
         <Image
@@ -120,6 +124,7 @@ export default function FAQsPage() {
           </div>
         </div>
       </section>
-    </main>
+      <Footer />
+    </>
   );
 }
