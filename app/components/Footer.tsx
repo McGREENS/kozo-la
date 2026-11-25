@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
@@ -46,6 +47,11 @@ export default function Footer() {
           </p>
           <p className="kozo-footer__text" style={{ marginTop: "12px", fontSize: "12px" }}>
             Questions? Email us at info@kozousa.com
+          </p>
+          <p className="kozo-footer__text" style={{ marginTop: "8px", fontSize: "12px" }}>
+            <Link href="/careers" style={{ color: "inherit", textDecoration: "underline", textUnderlineOffset: "2px" }}>
+              Careers
+            </Link>
           </p>
         </div>
 

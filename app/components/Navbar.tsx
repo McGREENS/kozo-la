@@ -43,9 +43,9 @@ export default function Navbar() {
               scrolled ? "text-black/70" : "text-white opacity-90"
             }`}
           >
-            <Link className={linkClass} href="/">Home</Link>
-            <Link className={linkClass} href="/about">About</Link>
-            <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={() => setMenuOpen(true)}>Menu</button>
+            <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={() => setMenuOpen(true)}>Food & Drink</button>
+            <Link className={linkClass} href="/about">Our Story</Link>
+            <Link className={linkClass} href="/private-events">Private Events</Link>
           </nav>
 
           {/* Logo */}
@@ -68,14 +68,13 @@ export default function Navbar() {
               scrolled ? "text-black/70" : "text-white/90"
             }`}
           >
-            <Link className={linkClass} href="/careers">Careers</Link>
-            <Link className={linkClass} href="/contact">Contact Us</Link>
+            <Link className={linkClass} href="/faqs">FAQs</Link>
             <button
               onClick={() => setBookingOpen(true)}
               className="rounded-[3px] bg-[#F2E4B1] px-4 py-2 text-[12px] font-semibold tracking-wide text-black/80 shadow-[0_6px_18px_rgba(0,0,0,0.28)] transition hover:bg-[#F0C2B2] border-none cursor-pointer"
               style={{ fontFamily: "inherit" }}
             >
-              Book a table
+              Book a Table
             </button>
           </div>
 
@@ -100,17 +99,16 @@ export default function Navbar() {
           className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8 text-[18px] font-medium tracking-wide text-black/80"
           onClick={() => setOpen(false)}
         >
-          <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link href="/about" onClick={() => setOpen(false)}>About</Link>
-          <button onClick={() => { setOpen(false); setMenuOpen(true); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Menu</button>
-          <Link href="/careers" onClick={() => setOpen(false)}>Careers</Link>
-          <Link href="/contact" onClick={() => setOpen(false)}>Contact Us</Link>
+          <button onClick={() => { setOpen(false); setMenuOpen(true); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Food & Drink</button>
+          <Link href="/about" onClick={() => setOpen(false)}>Our Story</Link>
+          <Link href="/private-events" onClick={() => setOpen(false)}>Private Events</Link>
+          <Link href="/faqs" onClick={() => setOpen(false)}>FAQs</Link>
           <button
             onClick={() => { setOpen(false); setBookingOpen(true); }}
             className="mt-4 rounded-[3px] bg-[#F2E4B1] px-6 py-3 text-[13px] font-semibold tracking-wide text-black/80 transition hover:bg-[#F0C2B2] border-none cursor-pointer"
             style={{ fontFamily: "inherit" }}
           >
-            Book a table
+            Book a Table
           </button>
         </div>
       )}
