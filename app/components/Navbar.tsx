@@ -29,6 +29,17 @@ export default function Navbar() {
 
   const linkClass = `hover:opacity-100 transition-opacity`;
 
+  const scrollToStory = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const element = document.getElementById('our-story');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If not on homepage, navigate to homepage with hash
+      window.location.href = '/#our-story';
+    }
+  };
+
   return (
     <>
       <header
@@ -44,7 +55,7 @@ export default function Navbar() {
             }`}
           >
             <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={() => setMenuOpen(true)}>Food & Drink</button>
-            <Link className={linkClass} href="/about">Our Story</Link>
+            <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={scrollToStory}>Our Story</button>
             <Link className={linkClass} href="/private-events">Private Events</Link>
           </nav>
 
@@ -100,7 +111,7 @@ export default function Navbar() {
           onClick={() => setOpen(false)}
         >
           <button onClick={() => { setOpen(false); setMenuOpen(true); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Food & Drink</button>
-          <Link href="/about" onClick={() => setOpen(false)}>Our Story</Link>
+          <button onClick={(e) => { setOpen(false); scrollToStory(e); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Our Story</button>
           <Link href="/private-events" onClick={() => setOpen(false)}>Private Events</Link>
           <Link href="/faqs" onClick={() => setOpen(false)}>FAQs</Link>
           <button

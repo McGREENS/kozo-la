@@ -80,7 +80,7 @@ export default function Home() {
         </main>
       </section>
 
-      <section className="kozo-intro" aria-label="KŌZO intro">
+      <section id="our-story" className="kozo-intro" aria-label="KŌZO intro">
         <Image
           src="/about.webp"
           alt=""
