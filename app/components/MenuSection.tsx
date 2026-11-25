@@ -121,7 +121,7 @@ export default function MenuSection() {
             Embār
           </h2>
           <p
-            className="text-[14px] leading-[1.85] tracking-[0.02em]"
+            className="text-[14px] leading-[1.85] tracking-[0.02em] mb-8"
             style={{ color: "rgba(0,0,0,0.72)" }}
           >
             Embār is Kōzo LA&apos;s intimate cocktail bar on the Sunset Strip.
@@ -129,6 +129,68 @@ export default function MenuSection() {
             spices and botanicals, while a high-fidelity sound system gives the
             music as much presence as the drinks.
           </p>
+          
+          {/* Email Signup */}
+          <div className="mt-10 mx-auto max-w-[480px]">
+            <form 
+              action="/api/embar-signup" 
+              method="POST"
+              className="flex flex-col sm:flex-row gap-3 items-center justify-center"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+                const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                const originalText = submitBtn.textContent;
+                
+                try {
+                  submitBtn.disabled = true;
+                  submitBtn.textContent = 'Submitting...';
+                  
+                  const res = await fetch('/api/embar-signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: emailInput.value })
+                  });
+                  
+                  if (res.ok) {
+                    submitBtn.textContent = '✓ Subscribed!';
+                    emailInput.value = '';
+                    setTimeout(() => {
+                      submitBtn.textContent = originalText;
+                      submitBtn.disabled = false;
+                    }, 3000);
+                  } else {
+                    throw new Error('Subscription failed');
+                  }
+                } catch (err) {
+                  submitBtn.textContent = 'Try again';
+                  submitBtn.disabled = false;
+                }
+              }}
+            >
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+                className="flex-1 w-full sm:w-auto px-5 py-3 text-[14px] rounded-[3px] border border-black/20 focus:outline-none focus:border-[#b89a5a] transition-colors"
+                style={{ background: "rgba(255,255,255,0.9)", color: "#1b232b" }}
+              />
+              <button
+                type="submit"
+                className="px-8 py-3 text-[12px] tracking-[0.18em] uppercase rounded-[3px] font-semibold transition-colors whitespace-nowrap"
+                style={{ background: "#1b232b", color: "#F2E4B1" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "#2a3440")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "#1b232b")}
+              >
+                Notify Me
+              </button>
+            </form>
+            <p className="mt-4 text-[11px] tracking-wide" style={{ color: "rgba(0,0,0,0.5)" }}>
+              We&apos;ll let you know when Embār opens
+            </p>
+          </div>
           
         </div>
       </section>
