@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
-import jwt, { SignOptions } from "jsonwebtoken";
-import { getDb } from "@/app/lib/db";
+import { SignJWT, jwtVerify } from "jose";
+import { db } from "@/app/lib/db";
 
 const JWT_SECRET: string = process.env.JWT_SECRET || "";
 
@@ -8,13 +8,15 @@ if (!JWT_SECRET) {
   console.error("JWT_SECRET is not configured in environment variables");
 }
 
+const getSecretKey = () => new TextEncoder().encode(JWT_SECRET);
+
 export interface JWTPayload {
   userId: number;
   email: string;
   name: string;
   role: string;
-  iat: number;
-  exp: number;
+  iat?: number;
+  exp?: number;
 }
 
 export interface AdminUser {
@@ -47,7 +49,7 @@ export async function verifyPassword(
 /**
  * Generate JWT token
  */
-export function generateToken(user: AdminUser, expiresIn: string = "24h"): string {
+export async function generateToken(user: AdminUser, expiresIn: string = "24h"): Promise<string> {
   const payload: Omit<JWTPayload, "iat" | "exp"> = {
     userId: user.id,
     email: user.email,
@@ -55,18 +57,20 @@ export function generateToken(user: AdminUser, expiresIn: string = "24h"): strin
     role: user.role,
   };
   
-  return jwt.sign(payload, JWT_SECRET, { 
-    expiresIn: expiresIn as jwt.SignOptions["expiresIn"]
-  });
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(expiresIn)
+    .sign(getSecretKey());
 }
 
 /**
  * Verify and decode JWT token
  */
-export function verifyToken(token: string): JWTPayload | null {
+export async function verifyToken(token: string): Promise<JWTPayload | null> {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
-    return decoded;
+    const { payload } = await jwtVerify(token, getSecretKey());
+    return payload as JWTPayload;
   } catch {
     return null;
   }
@@ -77,7 +81,6 @@ export function verifyToken(token: string): JWTPayload | null {
  */
 export async function getUserByEmail(email: string): Promise<AdminUser | null> {
   try {
-    const db = getDb();
     const result = await db.execute({
       sql: "SELECT id, email, name, role, is_active, created_at, updated_at FROM admin_users WHERE email = ? AND is_active = 1",
       args: [email],
@@ -106,7 +109,6 @@ export async function getUserByEmail(email: string): Promise<AdminUser | null> {
  */
 export async function getUserPasswordHash(email: string): Promise<string | null> {
   try {
-    const db = getDb();
     const result = await db.execute({
       sql: "SELECT password_hash FROM admin_users WHERE email = ? AND is_active = 1",
       args: [email],
@@ -158,7 +160,6 @@ export async function verifyAdminCredentials(
  */
 export async function getAllAdminUsers(): Promise<Omit<AdminUser, "password_hash">[]> {
   try {
-    const db = getDb();
     const result = await db.execute({
       sql: "SELECT id, email, name, role, is_active, created_at, updated_at FROM admin_users ORDER BY created_at DESC",
     });
@@ -188,7 +189,6 @@ export async function createAdminUser(
   role: string = "admin"
 ): Promise<boolean> {
   try {
-    const db = getDb();
     const passwordHash = await hashPassword(password);
 
     await db.execute({
@@ -211,8 +211,6 @@ export async function createAdminUser(
  */
 export async function deleteAdminUser(userId: number): Promise<boolean> {
   try {
-    const db = getDb();
-
     await db.execute({
       sql: "DELETE FROM admin_users WHERE id = ?",
       args: [userId],
@@ -233,7 +231,6 @@ export async function updateAdminUserPassword(
   newPassword: string
 ): Promise<boolean> {
   try {
-    const db = getDb();
     const passwordHash = await hashPassword(newPassword);
 
     await db.execute({
@@ -257,8 +254,6 @@ export async function updateAdminUserProfile(
   email: string
 ): Promise<boolean> {
   try {
-    const db = getDb();
-
     await db.execute({
       sql: "UPDATE admin_users SET name = ?, email = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
       args: [name, email, userId],
@@ -276,7 +271,6 @@ export async function updateAdminUserProfile(
  */
 export async function getVisibleAdminUsers(currentUserRole: string): Promise<Omit<AdminUser, "password_hash">[]> {
   try {
-    const db = getDb();
     let sql = "SELECT id, email, name, role, is_active, created_at, updated_at FROM admin_users";
 
     // Non-super-admins cannot see super-admins

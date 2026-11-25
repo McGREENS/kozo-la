@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/db";
+import { db } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-function verifyAuth(req: NextRequest): boolean {
+async function verifyAuth(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get("admin_token")?.value;
   if (!token) return false;
-  const decoded = verifyToken(token);
+  const decoded = await verifyToken(token);
   return decoded !== null;
 }
 
 export async function GET(req: NextRequest) {
-  if (!verifyAuth(req)) {
+  if (!(await verifyAuth(req))) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }
@@ -18,7 +18,6 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const db = getDb();
     const result = await db.execute({
       sql: `SELECT id, name, email, role, message, cv_filename FROM la_careers ORDER BY id DESC LIMIT 1000`,
     });
@@ -43,7 +42,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!verifyAuth(req)) {
+  if (!(await verifyAuth(req))) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }
@@ -61,7 +60,6 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const db = getDb();
     await db.execute({
       sql: `DELETE FROM la_careers WHERE email = ?`,
       args: [email],

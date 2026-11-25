@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/db";
+import { db } from "@/app/lib/db";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
 
   // ── Persist ──────────────────────────────────────────────────
   try {
-    const db = getDb();
     await db.execute({
       sql: `INSERT INTO la_careers (name, email, role, message) VALUES (?, ?, ?, ?)`,
       args: [name, email, role || null, message || null],

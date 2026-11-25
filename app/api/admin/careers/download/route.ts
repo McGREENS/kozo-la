@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/app/lib/db";
+import { db } from "@/app/lib/db";
 import { verifyToken } from "@/app/lib/auth";
 
-function verifyAuth(req: NextRequest): boolean {
+async function verifyAuth(req: NextRequest): Promise<boolean> {
   const token = req.cookies.get("admin_token")?.value;
   if (!token) return false;
-  const decoded = verifyToken(token);
+  const decoded = await verifyToken(token);
   return decoded !== null;
 }
 
@@ -14,7 +14,7 @@ function verifyAuth(req: NextRequest): boolean {
  * Downloads the CV for an applicant
  */
 export async function GET(req: NextRequest) {
-  if (!verifyAuth(req)) {
+  if (!(await verifyAuth(req))) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }
@@ -31,8 +31,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const db = getDb();
-    
     let result;
     try {
       result = await db.execute({

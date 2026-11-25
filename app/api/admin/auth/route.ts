@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Generate JWT token (expires in 24 hours)
-    const token = generateToken(user, "24h");
+    const token = await generateToken(user, "24h");
 
     // Return token as httpOnly cookie + response
     const response = NextResponse.json({

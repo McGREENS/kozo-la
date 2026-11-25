@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken, updateAdminUserPassword, updateAdminUserProfile } from "@/app/lib/auth";
 import { getAllAdminUsers, createAdminUser, deleteAdminUser, getVisibleAdminUsers } from "@/app/lib/auth";
 
-function verifyAuth(req: NextRequest) {
+async function verifyAuth(req: NextRequest) {
   const token = req.cookies.get("admin_token")?.value;
   if (!token) return null;
-  return verifyToken(token);
+  return await verifyToken(token);
 }
 
 // GET all users visible to current user
 export async function GET(req: NextRequest) {
-  const user = verifyAuth(req);
+  const user = await verifyAuth(req);
   if (!user) {
     return NextResponse.json(
       { error: "Unauthorized" },
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
 // POST - can create new user OR update own profile/password
 export async function POST(req: NextRequest) {
-  const user = verifyAuth(req);
+  const user = await verifyAuth(req);
   if (!user) {
     return NextResponse.json(
       { error: "Unauthorized" },
@@ -172,7 +172,7 @@ export async function POST(req: NextRequest) {
 
 // DELETE - remove user (with role-based restrictions)
 export async function DELETE(req: NextRequest) {
-  const user = verifyAuth(req);
+  const user = await verifyAuth(req);
   if (!user) {
     return NextResponse.json(
       { error: "Unauthorized" },
