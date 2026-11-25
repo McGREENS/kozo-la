@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import MenuModal from "./MenuModal";
 import BookingWidget from "./BookingWidget";
 
 const displayFont =
@@ -11,8 +10,9 @@ const displayFont =
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuDropdownOpen, setMenuDropdownOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -26,6 +26,23 @@ export default function Navbar() {
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setMenuDropdownOpen(false);
+      }
+    };
+
+    if (menuDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuDropdownOpen]);
 
   const linkClass = `hover:opacity-100 transition-opacity`;
 
@@ -65,7 +82,46 @@ export default function Navbar() {
               scrolled ? "text-black/70" : "text-white opacity-90"
             }`}
           >
-            <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={() => setMenuOpen(true)}>Food & Drink</button>
+            <div className="relative" ref={dropdownRef}>
+              <button 
+                className={`${linkClass} bg-transparent border-none cursor-pointer`} 
+                style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} 
+                onClick={() => setMenuDropdownOpen(!menuDropdownOpen)}
+              >
+                Food & Drink {menuDropdownOpen ? '▴' : '▾'}
+              </button>
+              {menuDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 mt-2 bg-white shadow-lg rounded-[3px] py-2 min-w-[160px] z-50"
+                  style={{ border: '1px solid rgba(0,0,0,0.1)' }}
+                >
+                  <a
+                    href="/menus/menu-food.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 text-[12px] text-black/70 hover:bg-gray-50 transition-colors"
+                  >
+                    Food Menu
+                  </a>
+                  <a
+                    href="/menus/menu-drinks.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 text-[12px] text-black/70 hover:bg-gray-50 transition-colors"
+                  >
+                    Drinks Menu
+                  </a>
+                  <a
+                    href="/menus/menu-wine.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block px-4 py-2 text-[12px] text-black/70 hover:bg-gray-50 transition-colors"
+                  >
+                    Wine Menu
+                  </a>
+                </div>
+              )}
+            </div>
             <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={scrollToStory}>Our Story</button>
             <button className={`${linkClass} bg-transparent border-none cursor-pointer`} style={{ fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} onClick={scrollToEvents}>Private Events</button>
           </nav>
@@ -121,7 +177,33 @@ export default function Navbar() {
           className="fixed inset-0 z-40 bg-white flex flex-col items-center justify-center gap-8 text-[18px] font-medium tracking-wide text-black/80"
           onClick={() => setOpen(false)}
         >
-          <button onClick={() => { setOpen(false); setMenuOpen(true); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Food & Drink</button>
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-[14px] text-black/50 uppercase tracking-wider">Menus</p>
+            <a
+              href="/menus/menu-food.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black/80"
+            >
+              Food Menu
+            </a>
+            <a
+              href="/menus/menu-drinks.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black/80"
+            >
+              Drinks Menu
+            </a>
+            <a
+              href="/menus/menu-wine.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-black/80"
+            >
+              Wine Menu
+            </a>
+          </div>
           <button onClick={(e) => { setOpen(false); scrollToStory(e); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Our Story</button>
           <button onClick={(e) => { setOpen(false); scrollToEvents(e); }} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "inherit", fontSize: "inherit", letterSpacing: "inherit", fontWeight: "inherit" }} className="text-black/80">Private Events</button>
           <Link href="/faqs" onClick={() => setOpen(false)}>FAQs</Link>
@@ -134,7 +216,6 @@ export default function Navbar() {
           </button>
         </div>
       )}
-      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
       {bookingOpen && <BookingWidget onClose={() => setBookingOpen(false)} />}
     </>
   );

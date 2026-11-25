@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import MenuModal from "./MenuModal";
 
 const displayFont =
   "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif";
@@ -14,8 +13,6 @@ const bodyText =
   "text-[14px] leading-[1.85] tracking-[0.02em] text-[#2a3640]";
 
 export default function MenuSection() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <>
       {/* Food & Drinks on cream */}
@@ -38,14 +35,15 @@ export default function MenuSection() {
                 alongside sushi and sashimi.
               </p>
               
-              <button
-                type="button"
-                onClick={() => setMenuOpen(true)}
+              <a
+                href="/menus/menu-food.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={ctaButton}
-                style={ctaStyle}
+                style={{ display: 'inline-block', textDecoration: 'none' }}
               >
                 View Food Menu
-              </button>
+              </a>
             </div>
             <div className="w-full md:w-1/2">
               <div className="flex flex-col gap-2">
@@ -81,14 +79,15 @@ export default function MenuSection() {
                 Discover our wine and sake list, carefully curated to complement the
                  dishes at Kōzo. Enjoy a glass, a carafe or a bottle for the table.
               </p>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(true)}
+              <a
+                href="/menus/menu-drinks.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
                 className={ctaButton}
-                style={ctaStyle}
+                style={{ display: 'inline-block', textDecoration: 'none' }}
               >
                 View Drinks Menu
-              </button>
+              </a>
             </div>
             <div className="w-full md:w-1/2">
               <div className="grid grid-cols-2 gap-2">
@@ -194,8 +193,6 @@ export default function MenuSection() {
           
         </div>
       </section>
-
-      {menuOpen && <MenuModal onClose={() => setMenuOpen(false)} />}
     </>
   );
 }
