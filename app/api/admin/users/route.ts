@@ -209,7 +209,7 @@ export async function DELETE(req: NextRequest) {
 
     // Prevent deletion of super_admin users
     // First check the target user's role
-    const db = await import("@/app/lib/db").then(m => m.getDb());
+    const { db } = await import("@/app/lib/db");
     const result = await db.execute({
       sql: "SELECT role FROM admin_users WHERE id = ?",
       args: [userId],
