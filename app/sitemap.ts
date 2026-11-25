@@ -1,18 +1,11 @@
-import { MetadataRoute } from 'next'
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const base = "https://www.kozokg.com";
   return [
-    {
-      url: 'https://kozousa.com',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: 'https://kozousa.com/careers',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-  ]
+    { url: base, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
+    { url: `${base}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/contact`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/careers`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+  ];
 }

@@ -1,38 +1,36 @@
 import Image from "next/image";
 import { FaInstagram } from "react-icons/fa";
 
-/**
- * Footer — KŌZO Los Angeles
- *
- * Identical three-column layout to kozo-next's Footer.
- * Same kozo-footer__* CSS classes, same background image approach,
- * same social icon pattern (kozo-footer__icon).
- * Content updated for LA; hours left as TBC until opening.
- */
 export default function Footer() {
   return (
     <footer className="kozo-footer" aria-label="Site footer">
       <Image
-        src="/about.png"
+        src="/about.webp"
         alt=""
         fill
         className="object-cover object-center"
         style={{ zIndex: 0 }}
       />
-
-      <div className="kozo-footer__inner">
-
-        {/* Left column — address */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1120px] items-start justify-between gap-12 px-8 py-16">
         <div className="kozo-footer__column">
-          <h3 className="kozo-footer__heading">Address</h3>
-          <address className="kozo-footer__address" style={{ fontStyle: "normal" }}>
-            <p>8500 W Sunset Blvd</p>
-            <p>West Hollywood, CA 90069</p>
-            <p>United States</p>
-          </address>
+          <h3 className="kozo-footer__heading">Contact Us</h3>
+          <p className="kozo-footer__text">
+            8500 W Sunset Blvd
+            <br />
+            West Hollywood, CA 90069
+          </p>
+          <p className="kozo-footer__text">
+            <a href="tel:+12137230821" style={{ color: "inherit", textDecoration: "none" }}>
+              (213) 723-0821
+            </a>
+          </p>
+          <p className="kozo-footer__text">
+            <a href="mailto:info@kozousa.com" style={{ color: "inherit", textDecoration: "none" }}>
+              info@kozousa.com
+            </a>
+          </p>
         </div>
 
-        {/* Centre column — logo, socials, copyright */}
         <div className="kozo-footer__center">
           <div className="kozo-footer__logo-wrap" aria-label="KŌZO logo">
             <Image
@@ -40,20 +38,25 @@ export default function Footer() {
               alt="Kōzo logo mark"
               width={130}
               height={84}
-              quality={80}
               className="kozo-footer__logo-image"
             />
           </div>
-          <div className="kozo-footer__socials" aria-label="Social media">
-            <a href="https://www.instagram.com/kozolosangeles/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="kozo-footer__icon">
-              <FaInstagram size={20} />
-            </a>
-          </div>
-          <p className="kozo-footer__copyright">
-            &copy; {new Date().getFullYear()} Kōzo Hospitality USA LLC. All Rights Reserved.
+          <p className="kozo-footer__copyright" style={{ marginTop: "32px" }}>
+            © 2026 Kōzo Hospitality USA LLC
+          </p>
+          <p className="kozo-footer__text" style={{ marginTop: "12px", fontSize: "12px" }}>
+            Questions? Email us at info@kozousa.com
           </p>
         </div>
 
+        <div className="kozo-footer__column" style={{ textAlign: "center" }}>
+          <h3 className="kozo-footer__heading">Follow Us</h3>
+          <div style={{ display: "flex", justifyContent: "center", gap: "22px", marginTop: "12px" }}>
+            <a href="https://www.instagram.com/kozolosangeles/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="kozo-footer__icon">
+              <FaInstagram size={20} />
+            </a>
+          </div>
+        </div>
       </div>
     </footer>
   );

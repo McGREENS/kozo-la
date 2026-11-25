@@ -1,51 +1,27 @@
-"use client";
-
-import { useState } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { FaInstagram } from "react-icons/fa";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import HeroSlideshow from "./components/HeroSlideshow";
+import MenuSection from "./components/MenuSection";
+import EventsSection from "./components/EventsSection";
+import HeroMenuButton from "./components/HeroMenuButton";
 
-const displayFont =
-  "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif";
+export const metadata: Metadata = {
+  title: "Kōzo Los Angeles | Afro-Asian Fine Dining on the Sunset Strip",
+  description:
+    "Kōzo Los Angeles — Afro-Asian fine dining on the Sunset Strip in West Hollywood. Experience elevated sushi, Pan-Asian cuisine, and African flavors in an intimate setting at 8500 W Sunset Blvd.",
+  alternates: { canonical: "https://www.kozousa.com" },
+  openGraph: {
+    url: "https://www.kozousa.com",
+    title: "Kōzo Los Angeles | Afro-Asian Fine Dining on the Sunset Strip",
+    description: "Afro-Asian fine dining on the Sunset Strip. Elevated sushi, Pan-Asian cuisine, and African hospitality in West Hollywood.",
+  },
+};
 
-export default function HomePage() {
-  const [form, setForm] = useState({ name: "", email: "" });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setError("");
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const res = await fetch("/api/la-newsletter", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "Something went wrong. Please try again.");
-        return;
-      }
-      setSuccess(true);
-      setForm({ name: "", email: "" });
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
+export default function Home() {
   return (
-    <>
-      {/* JSON-LD — restaurant entity for Google */}
+    <div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -53,246 +29,114 @@ export default function HomePage() {
             "@context": "https://schema.org",
             "@type": "Restaurant",
             name: "Kōzo Los Angeles",
-            url: "https://kozola.com",
+            url: "https://www.kozousa.com",
+            logo: "https://www.kozousa.com/kozo-circl.png",
+            image: "https://www.kozousa.com/og-image.jpg",
             description:
-              "Kōzo is coming to Los Angeles. The Afro-Asian dining experience — vibrant African flavours meeting Pan-Asian precision.",
-            servesCuisine: ["Afro-Asian", "Pan-Asian", "Sushi", "Farm to Table"],
+              "Kōzo is an Afro-Asian restaurant on the Sunset Strip in West Hollywood. Vibrant African flavours meet Pan-Asian precision in a refined dining experience.",
+            foundingDate: "2025",
+            servesCuisine: ["African", "Asian", "Pan-Asian", "Sushi", "Japanese", "Fusion", "Farm to Table", "Contemporary"],
             priceRange: "$$$",
+            keywords: "Kozo Los Angeles, Kozo LA, Kozo West Hollywood, Kozo Sunset Strip, Afro-Asian restaurant Los Angeles, fine dining LA, sushi West Hollywood, Asian restaurant Los Angeles, Sunset Strip restaurants",
             address: {
               "@type": "PostalAddress",
-              addressLocality: "Los Angeles",
+              streetAddress: "8500 W Sunset Blvd",
+              addressLocality: "West Hollywood",
               addressRegion: "CA",
+              postalCode: "90069",
               addressCountry: "US",
             },
+            email: "info@kozousa.com",
+            sameAs: ["https://www.instagram.com/kozolosangeles/?hl=en"],
           }),
         }}
       />
+      <section className="kozo-hero">
+        <HeroSlideshow />
 
-      {/*
-       * ─────────────────────────────────────────────────────────
-       * PAGE SHELL
-       * Three-zone layout: nav → stage → base
-       *
-       * Transition-readiness:
-       *   - Zone 1 (.kozo-la-nav): add <Navbar /> links → set
-       *     data-state="visible" on .kozo-la-nav__links to reveal them
-       *   - Zone 3 (.kozo-la-base): expand into a full <Footer />
-       *     by filling the left/right columns with real content
-       *   No structural redesign required in either case.
-       * ─────────────────────────────────────────────────────────
-       */}
-      <div className="kozo-la-page">
+        <Navbar />
 
-        {/* Background video with preload — z-index 0 */}
-        <video
-          src="/kozovideo.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-          className="object-cover object-center absolute inset-0 w-full h-full"
+        <main className="relative z-10 flex min-h-[100svh] items-center">
+          <div className="mx-auto w-full max-w-[1120px] px-8">
+            <div className="mx-auto max-w-[900px] pt-10 text-center text-white">
+              <h1
+                className="text-[56px] font-normal leading-[1.05] tracking-wide"
+                style={{
+                  fontFamily:
+                    "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
+                  textShadow: "0 10px 35px rgba(0,0,0,0.55)",
+                }}
+              >
+                The Afro - Asian Experience
+              </h1>
+              <p className="mt-4 text-[20px] font-medium tracking-wide text-white/85">
+                More than just a restaurant
+              </p>
+              <div className="mt-8 flex justify-center">
+                <HeroMenuButton />
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+
+      <section className="kozo-intro" aria-label="KŌZO intro">
+        <Image
+          src="/about.webp"
+          alt=""
+          fill
+          className="object-cover object-center"
           style={{ zIndex: 0 }}
         />
+        <div className="kozo-intro__circle" aria-hidden="true">
+          <Image
+            src="/kozo-circl.webp"
+            alt=""
+            width={620}
+            height={620}
+            priority={false}
+          />
+        </div>
 
-        {/* ── Zone 1: top nav bar ──────────────────────────────── */}
-        <header className="kozo-la-nav">
-          {/* Desktop: horizontal logo — Mobile: circular mark */}
-          <a
-            href="/"
-            className="kozo-la-nav__logo kozo-la-animate"
-            style={{ animationDelay: "0.1s" }}
-            aria-label="KŌZO Los Angeles"
-          >
-            <Image
-              src="/kozo-logo-mark.webp"
-              alt="KŌZO Los Angeles"
-              width={52}
-              height={52}
-              priority
-              quality={80}
-              className="kozo-la-nav__logo-mark"
-            />
-          </a>
-
-          {/* Social media icons — top right */}
-          <div className="kozo-la-nav__socials kozo-la-animate" style={{ animationDelay: "0.1s" }}>
-            <a
-              href="https://www.instagram.com/kozolosangeles/"
-              className="kozo-la-nav__social-icon"
-              aria-label="KŌZO Los Angeles on Instagram"
-              target="_blank"
-              rel="noopener noreferrer"
+        <div className="relative z-10 mx-auto max-w-[1120px] px-8">
+          <div className="mx-auto max-w-[980px] text-center text-white">
+            <h2
+              className="kozo-intro__title"
+              style={{
+                fontFamily:
+                  "var(--font-display), ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif",
+              }}
             >
-              <FaInstagram size={15} aria-hidden="true" />
-            </a>
-          </div>
-        </header>
-
-        {/* ── Zone 2: centred hero stage ────────────────────────── */}
-        <main className="kozo-la-stage" aria-label="KŌZO Los Angeles — Coming Soon">
-
-          {/* Main wordmark */}
-          <div
-            className="kozo-la-stage__title kozo-la-animate"
-            style={{ animationDelay: "0.25s" }}
-          >
-            <Image
-              src="/KOZO_Logo_HOR_Positive_White.png"
-              alt="KŌZO Los Angeles"
-              width={600}
-              height={120}
-              priority
-              quality={80}
-              className="kozo-la-stage__logo"
-            />
-          </div>
-
-
-
-          {/* City statement */}
-          <p
-            className="kozo-la-stage__statement kozo-la-animate"
-            style={{ fontFamily: displayFont, animationDelay: "0.52s" }}
-          >
-            Los Angeles
-          </p>
-
-          {/* Opening date */}
-          <p
-            className="kozo-la-stage__opening kozo-la-animate"
-            style={{ animationDelay: "0.65s" }}
-          >
-            Opening Summer 2026
-          </p>
-
-        </main>
-
-        {/* ── Zone 3: bottom base bar ───────────────────────────── */}
-        {/*
-         * Transition note: when this becomes a full site, expand each
-         * column into its full footer content. The grid structure
-         * (left / centre / right) is already in place.
-         */}
-        <footer className="kozo-la-base" aria-label="Page footer">
-
-          {/* Left — newsletter sign-up */}
-          <div
-            className="kozo-la-base__left kozo-la-animate"
-            style={{ animationDelay: "0.90s" }}
-          >
-            <p className="kozo-la-base__label" id="newsletter-label">
-              Be the first to know
+              An unforgettable dining Experience
+            </h2>
+            <p className="kozo-intro__copy">
+              Kōzo began in Accra with a menu inspired by the flavours of Africa. 
+              Today, our Afro-Asian kitchen has a home on West Hollywood’s Sunset Strip. 
             </p>
-
-            {success ? (
-              <div className="kozo-la-success" role="status" aria-live="polite">
-                <p
-                  className="kozo-la-success__title"
-                  style={{ fontFamily: displayFont }}
-                >
-                  You&apos;re on the list.
-                </p>
-                <p className="kozo-la-success__body">
-                  We&apos;ll be in touch as we approach opening.
-                </p>
-              </div>
-            ) : (
-              <form
-                className="kozo-la-form"
-                onSubmit={handleSubmit}
-                noValidate
-                aria-labelledby="newsletter-label"
-              >
-                <div className="kozo-la-form__row">
-                  <input
-                    className="kozo-la-input"
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={form.name}
-                    onChange={handleChange}
-                    autoComplete="name"
-                    required
-                    aria-label="Your name"
-                  />
-                  <input
-                    className="kozo-la-input"
-                    type="email"
-                    name="email"
-                    placeholder="Email address"
-                    value={form.email}
-                    onChange={handleChange}
-                    autoComplete="email"
-                    required
-                    aria-label="Your email address"
-                  />
-                  <button
-                    className="kozo-la-submit"
-                    type="submit"
-                    disabled={loading}
-                    aria-busy={loading}
-                  >
-                    {loading ? "…" : "Notify Me"}
-                  </button>
-                </div>
-
-                {error && (
-                  <p className="kozo-la-error" role="alert" aria-live="assertive">
-                    {error}
-                  </p>
-                )}
-              </form>
-            )}
-          </div>
-
-          {/* Centre — social icons + copyright + email + address */}
-          <div
-            className="kozo-la-base__centre kozo-la-animate"
-            style={{ animationDelay: "1.0s" }}
-          >
-            <p className="kozo-la-base__copy">
-              &copy; {new Date().getFullYear()} Kōzo Hospitality USA LLC.
+            <p className="kozo-intro__copy mt-5">
+              We tell our story through food, bringing African ingredients and 
+              Asian cooking traditions to the same table. For us, African luxury 
+              is in the warmth of the welcome and the care we bring to every celebration.
             </p>
-            <p className="kozo-la-base__copy" style={{ marginTop: "8px", fontSize: "11px" }}>
-              Questions? Email us at{" "}
-              <a 
-                href="mailto:info@kozousa.com"
-                style={{ color: "#F2E4B1", textDecoration: "none" }}
+            <div className="mt-10">
+              <a
+                href="https://www.instagram.com/kozolosangeles/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-[3px] border border-[#F2E4B1] px-6 py-3 text-[12px] font-semibold tracking-widest text-[#F2E4B1] uppercase transition hover:bg-[#F0C2B2] hover:border-[#F0C2B2] hover:text-black/80"
               >
-                info@kozousa.com
+                Our Community
               </a>
-            </p>
-            <p className="kozo-la-base__copy" style={{ marginTop: "12px", fontSize: "11px", lineHeight: "1.6" }}>
-              8500 W Sunset Blvd<br />
-              West Hollywood, CA 90069
-            </p>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Right — careers */}
-          <div
-            className="kozo-la-base__right kozo-la-animate"
-            style={{ animationDelay: "1.1s" }}
-          >
-            <p className="kozo-la-careers__eyebrow">Join the team</p>
-            <p
-              className="kozo-la-careers__heading"
-              style={{ fontFamily: displayFont }}
-            >
-              We&apos;re building something extraordinary in LA.
-            </p>
-            <Link
-              href="/careers"
-              className="kozo-la-careers__cta"
-              aria-label="Express interest in joining KŌZO Los Angeles"
-            >
-              Careers
-            </Link>
-          </div>
+      <MenuSection />
 
-        </footer>
-      </div>
-    </>
+      <EventsSection />
+
+      <Footer />
+    </div>
   );
 }

@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import ImageProtection from "./components/ImageProtection";
+import localFont from "next/font/local";
 import "./globals.css";
 
-/* ── Optima — same loading approach as kozo-next ─────────────── */
+const BASE_URL = "https://www.kozousa.com";
+
 const optima = localFont({
   src: [
     {
@@ -21,103 +22,73 @@ const optima = localFont({
   display: "swap",
 });
 
-/* ── Viewport ────────────────────────────────────────────────── */
 export const viewport: Viewport = {
-  themeColor: "#0b0b0b",
+  themeColor: "#1a1a1a",
 };
 
-/* ── Root metadata ───────────────────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kozousa.com"),
+  metadataBase: new URL("https://www.kozousa.com"),
   title: {
-    default: "Kōzo Los Angeles — Afro-Asian Dining Experience Opening Summer 2026",
+    default: "Kōzo Los Angeles | Afro-Asian Fine Dining on the Sunset Strip",
     template: "%s | Kōzo Los Angeles",
   },
   description:
-    "Kōzo Los Angeles is an Afro-Asian fine dining restaurant coming to Los Angeles in Summer 2026. Experience vibrant African flavours meeting Pan-Asian precision. Careers now open.",
+    "Kōzo Los Angeles — Afro-Asian fine dining on the Sunset Strip in West Hollywood. Vibrant African flavours meet Pan-Asian precision — sushi, elevated cuisine, and warm hospitality at 8500 W Sunset Blvd.",
   keywords: [
-    "Kōzo Los Angeles",
-    "Kozo LA",
-    "Afro-Asian restaurant Los Angeles",
-    "Pan-Asian restaurant LA",
-    "fine dining Los Angeles",
-    "luxury restaurant LA",
-    "coming soon Los Angeles restaurant",
-    "Asian African fusion",
-    "farm to table Los Angeles",
-    "high-end dining California",
-    "Afro-Asian cuisine",
-    "restaurant jobs Los Angeles",
+    // Brand
+    "Kōzo", "Kozo", "Kozo Los Angeles", "Kozo LA", "Kozo West Hollywood", "Kozo Sunset Strip",
+    // Cuisine type
+    "Afro-Asian restaurant Los Angeles", "Afro Asian restaurant LA", "African Asian fusion LA",
+    "Pan-Asian cuisine Los Angeles", "Asian restaurant LA", "Asian restaurant West Hollywood",
+    "African restaurant Los Angeles", "African restaurant West Hollywood",
+    "sushi Los Angeles", "sushi West Hollywood", "sushi Sunset Strip", "Japanese restaurant LA",
+    "fusion restaurant LA", "contemporary Asian LA",
+    // Luxury / experience
+    "luxury restaurant Los Angeles", "fine dining LA", "fine dining West Hollywood",
+    "best restaurant Los Angeles", "best restaurant Sunset Strip",
+    "upscale restaurant LA", "elegant dining West Hollywood",
+    "romantic restaurant LA", "top restaurant Sunset Strip",
+    // Farm to table
+    "farm to table Los Angeles", "farm to table LA",
+    "sustainable dining LA", "California cuisine",
+    // Location
+    "restaurant Sunset Strip", "Sunset Blvd restaurant", "West Hollywood dining",
+    "where to eat Sunset Strip", "best restaurant West Hollywood",
   ],
-  authors: [{ name: "Kōzo Hospitality", url: "https://kozousa.com" }],
-  creator: "Kōzo Hospitality",
-  publisher: "Kōzo Hospitality",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://kozousa.com",
-  },
-  verification: {
-    google: "BX4iPAsfnQttyY3NO7ZiXgo7gN1cC6l9TVnkyLj0gmg",
-  },
+  authors: [{ name: "Ramzi Yamusah", url: "https://www.kozousa.com" }],
+  creator: "Kōzo",
+  publisher: "Kōzo",
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  alternates: { canonical: "https://www.kozousa.com" },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://kozousa.com",
+    url: "https://www.kozousa.com",
     siteName: "Kōzo Los Angeles",
-    title: "Kōzo Los Angeles — Afro-Asian Dining Experience",
+    title: "Kōzo | The Afro-Asian Experience — Sunset Strip",
     description:
-      "Vibrant African flavours meet Pan-Asian precision. Opening Summer 2026 in Los Angeles.",
-    images: [
-      {
-        url: "/og-image.webp",
-        width: 1200,
-        height: 630,
-        alt: "Kōzo Los Angeles — Afro-Asian fine dining",
-        type: "image/webp",
-      },
-    ],
+      "Vibrant African flavours meet Pan-Asian precision on the Sunset Strip. Farm-to-table dining at 8500 W Sunset Blvd, West Hollywood. Opening 2025.",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Kōzo Los Angeles — Afro-Asian dining experience" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kōzo Los Angeles — Afro-Asian Dining",
-    description:
-      "Vibrant African flavours meet Pan-Asian precision. Coming Summer 2026.",
-    images: ["/og-image.webp"],
-    creator: "@kozolosangeles",
+    title: "Kōzo | The Afro-Asian Experience — Sunset Strip",
+    description: "Vibrant African flavours meet Pan-Asian precision on the Sunset Strip in West Hollywood.",
+    images: ["/og-image.jpg"],
   },
   icons: {
-    icon: [
-      { rel: "icon", url: "/favicon.ico", sizes: "any" },
-      { rel: "apple-touch-icon", url: "/favicon.ico" },
-    ],
-    shortcut: "/favicon.ico",
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 
-
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="manifest" href="/site.webmanifest" />
-        <meta name="theme-color" content="#0A1B2A" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      </head>
       <body className={`${optima.variable} antialiased`}>
         <ImageProtection />
         {children}

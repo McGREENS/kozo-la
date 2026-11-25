@@ -2,285 +2,171 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  async function handleLogin(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
 
-    try {
-      const res = await fetch("/api/admin/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
+    setLoading(false);
 
-      if (!res.ok) {
-        setError(data.error || "Login failed");
-        setPassword("");
-        return;
-      }
-
-      // Store token in sessionStorage for client-side access
-      sessionStorage.setItem("admin_token", data.token);
-      router.push("/admin/dashboard");
-    } catch {
-      setError("Something went wrong. Please try again.");
-      setPassword("");
-    } finally {
-      setLoading(false);
+    if (!res.ok) {
+      setError(data.error ?? "Something went wrong");
+      return;
     }
+
+    router.push("/admin/dashboard");
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        background: `url(/image1.jpeg) center center / cover no-repeat`,
-        fontFamily: "'Optima', Georgia, serif",
-        position: "relative",
-      }}
-    >
-      {/* Overlay */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: "linear-gradient(135deg, rgba(10, 27, 42, 0.92) 0%, rgba(10, 27, 42, 0.85) 100%)",
-          zIndex: 0,
-        }}
-      />
+    <div className="min-h-screen flex" style={{ background: "#05060c" }}>
 
-      {/* Content */}
-      <div style={{ position: "relative", zIndex: 1 }}>
-        <div
-          style={{
-            background: "rgba(26, 26, 26, 0.95)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(160, 216, 179, 0.2)",
-            borderRadius: "12px",
-            padding: "48px",
-            maxWidth: "420px",
-            width: "100%",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-          }}
-        >
-          {/* Logo Area */}
-          <div style={{ textAlign: "center", marginBottom: "40px" }}>
-            <h1
-              style={{
-                color: "#F2E4B1",
-                fontSize: "32px",
-                marginBottom: "8px",
-                letterSpacing: "0.05em",
-                fontWeight: "400",
-              }}
-            >
-              Kōzo Admin
-            </h1>
+      {/* Left — branding panel */}
+      <div
+        className="hidden lg:flex flex-col justify-between w-[480px] shrink-0 px-14 py-14 relative overflow-hidden"
+        style={{ background: "#0b0c15" }}
+      >
+        {/* Subtle background image */}
+        <Image
+          src="/about1010.jpg"
+          alt=""
+          fill
+          className="object-cover object-center opacity-20"
+        />
+        <div className="relative z-10 flex flex-col justify-between h-full">
+          {/* Logo */}
+          <div>
             <p
-              style={{
-                color: "rgba(160, 216, 179, 0.7)",
-                fontSize: "12px",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-              }}
+              className="text-[32px] tracking-[0.28em] text-white font-normal"
+              style={{ fontFamily: "var(--font-optima), ui-serif, Georgia, serif" }}
             >
-              Secure Portal
+              KŌZO
+            </p>
+            <p className="text-[11px] tracking-[0.2em] uppercase mt-1" style={{ color: "#b89a5a" }}>
+              Admin Panel
             </p>
           </div>
 
-          <form onSubmit={handleLogin}>
-            {/* Email Field */}
-            <div style={{ marginBottom: "24px" }}>
-              <label
-                style={{
-                  display: "block",
-                  color: "#A0D8B3",
-                  fontSize: "11px",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                  fontWeight: "500",
-                }}
-              >
-                Email Address
+          {/* Bottom quote */}
+          <div>
+            <p
+              className="text-[22px] font-normal leading-[1.3]"
+              style={{
+                color: "#F2E4B1",
+                fontFamily: "var(--font-optima), ui-serif, Georgia, serif",
+              }}
+            >
+              Where Cultures Converge<br />and Flavours Inspire.
+            </p>
+            <p className="text-[12px] tracking-wide mt-3" style={{ color: "rgba(255,255,255,0.4)" }}>
+              Kōzo La — Est. 2026
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right — login form */}
+      <div className="flex-1 flex items-center justify-center px-6">
+        <div className="w-full max-w-[400px]">
+
+          {/* Mobile logo */}
+          <div className="lg:hidden mb-10 text-center">
+            <p
+              className="text-[28px] tracking-[0.28em] text-white font-normal"
+              style={{ fontFamily: "var(--font-optima), ui-serif, Georgia, serif" }}
+            >
+              KŌZO
+            </p>
+            <p className="text-[11px] tracking-[0.2em] uppercase mt-1" style={{ color: "#b89a5a" }}>
+              Admin Panel
+            </p>
+          </div>
+
+          <h1
+            className="text-[28px] font-normal text-white mb-2"
+            style={{ fontFamily: "var(--font-optima), ui-serif, Georgia, serif" }}
+          >
+            Sign in
+          </h1>
+          <p className="text-[13px] mb-10" style={{ color: "rgba(255,255,255,0.45)" }}>
+            Enter your credentials to access the dashboard
+          </p>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-[11px] tracking-[0.16em] uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>
+                Email
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@kozousa.com"
-                style={{
-                  width: "100%",
-                  padding: "12px 14px",
-                  background: "rgba(242, 228, 177, 0.08)",
-                  border: "1px solid rgba(242, 228, 177, 0.2)",
-                  borderRadius: "6px",
-                  color: "#F2E4B1",
-                  fontSize: "14px",
-                  fontFamily: "inherit",
-                  boxSizing: "border-box",
-                  transition: "all 0.3s ease",
-                  outline: "none",
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(160, 216, 179, 0.4)";
-                  e.currentTarget.style.background = "rgba(242, 228, 177, 0.12)";
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = "rgba(242, 228, 177, 0.2)";
-                  e.currentTarget.style.background = "rgba(242, 228, 177, 0.08)";
-                }}
                 required
+                placeholder="admin@kozokg.com"
+                className="w-full px-4 py-3 text-[13px] text-white rounded-[3px] outline-none transition-colors"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  fontFamily: "inherit",
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#F2E4B1")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
               />
             </div>
 
-            {/* Password Field */}
-            <div style={{ marginBottom: "28px" }}>
-              <label
-                style={{
-                  display: "block",
-                  color: "#A0D8B3",
-                  fontSize: "11px",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: "8px",
-                  fontWeight: "500",
-                }}
-              >
+            <div className="flex flex-col gap-2">
+              <label className="text-[11px] tracking-[0.16em] uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>
                 Password
               </label>
-              <div
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+                className="w-full px-4 py-3 text-[13px] text-white rounded-[3px] outline-none transition-colors"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  background: "rgba(242, 228, 177, 0.08)",
-                  border: "1px solid rgba(242, 228, 177, 0.2)",
-                  borderRadius: "6px",
-                  padding: "0 12px",
-                  transition: "all 0.3s ease",
+                  background: "rgba(255,255,255,0.06)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  fontFamily: "inherit",
                 }}
-              >
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  style={{
-                    flex: 1,
-                    padding: "12px 0",
-                    background: "transparent",
-                    border: "none",
-                    color: "#F2E4B1",
-                    fontSize: "14px",
-                    fontFamily: "inherit",
-                    outline: "none",
-                  }}
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "#A0D8B3",
-                    cursor: "pointer",
-                    padding: "0",
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "16px",
-                  }}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
+                onFocus={(e) => (e.currentTarget.style.borderColor = "#F2E4B1")}
+                onBlur={(e) => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)")}
+              />
             </div>
 
-            {/* Error Message */}
             {error && (
-              <div
-                style={{
-                  color: "#f87171",
-                  fontSize: "13px",
-                  marginBottom: "16px",
-                  textAlign: "center",
-                  background: "rgba(248, 113, 113, 0.1)",
-                  border: "1px solid rgba(248, 113, 113, 0.2)",
-                  padding: "10px",
-                  borderRadius: "4px",
-                }}
-              >
+              <p className="text-[12px] px-3 py-2 rounded-[3px]" style={{ color: "#f87171", background: "rgba(248,113,113,0.08)" }}>
                 {error}
-              </div>
+              </p>
             )}
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              style={{
-                width: "100%",
-                padding: "12px 16px",
-                background: "#A0D8B3",
-                color: "#0A1B2A",
-                border: "none",
-                borderRadius: "6px",
-                fontSize: "12px",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                fontWeight: "600",
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.7 : 1,
-                fontFamily: "inherit",
-                transition: "all 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = "#8dd4a3";
-                  e.currentTarget.style.transform = "translateY(-2px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!loading) {
-                  e.currentTarget.style.background = "#A0D8B3";
-                  e.currentTarget.style.transform = "translateY(0)";
-                }
-              }}
+              className="mt-2 w-full py-3 text-[12px] tracking-[0.18em] uppercase font-semibold rounded-[3px] transition-colors disabled:opacity-60"
+              style={{ background: "#F2E4B1", color: "#1b232b", fontFamily: "inherit" }}
+              onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = "#F0C2B2"; }}
+              onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = "#F2E4B1"; }}
             >
-              {loading ? "Logging in..." : "Sign In"}
+              {loading ? "Signing in…" : "Sign in"}
             </button>
           </form>
-
-          {/* Footer */}
-          <p
-            style={{
-              color: "rgba(195, 197, 200, 0.5)",
-              fontSize: "11px",
-              marginTop: "28px",
-              textAlign: "center",
-              lineHeight: "1.6",
-              letterSpacing: "0.02em",
-            }}
-          >
-            Kōzo Los Angeles Admin Portal
-          </p>
         </div>
       </div>
     </div>

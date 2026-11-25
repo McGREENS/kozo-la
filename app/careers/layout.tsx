@@ -1,48 +1,17 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Careers | Kōzo Los Angeles",
+  title: "Careers",
   description:
-    "Join the Kōzo Los Angeles team. We're hiring passionate hospitality professionals for our Afro-Asian fine dining restaurant opening Summer 2026. Positions include chefs, managers, sommeliers, and more.",
-  keywords: [
-    "Kōzo Los Angeles careers",
-    "restaurant jobs Los Angeles",
-    "chef jobs LA",
-    "hospitality jobs Los Angeles",
-    "fine dining careers",
-    "Kōzo jobs",
-    "sommelier jobs Los Angeles",
-    "culinary careers",
-  ],
+    "Join the Kōzo Los Angeles team on the Sunset Strip. We're hiring passionate hospitality professionals. View open positions and apply today.",
+  alternates: { canonical: "https://www.kozousa.com/careers" },
   openGraph: {
+    url: "https://www.kozousa.com/careers",
     title: "Careers at Kōzo Los Angeles",
-    description:
-      "Join our team. We're hiring experienced hospitality professionals for our LA opening.",
-    type: "website",
-    url: "https://kozousa.com/careers",
-    siteName: "Kōzo Los Angeles",
-    images: [
-      {
-        url: "/og-image.webp",
-        width: 1200,
-        height: 630,
-        alt: "Careers at Kōzo Los Angeles",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary",
-    title: "Join the Kōzo Los Angeles Team",
-    description:
-      "We're hiring passionate hospitality professionals for our LA opening.",
-    creator: "@kozolosangeles",
+    description: "Join our team. View open positions at Kōzo Los Angeles and apply today.",
   },
 };
 
-export default function CareersLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CareersLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
